@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppLmsLiveRouteImport } from './routes/app.lms.live'
+import { Route as AppCrmPipelineRouteImport } from './routes/app.crm.pipeline'
+import { Route as AppCrmLeadsRouteImport } from './routes/app.crm.leads'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -28,29 +31,72 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLmsLiveRoute = AppLmsLiveRouteImport.update({
+  id: '/lms/live',
+  path: '/lms/live',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCrmPipelineRoute = AppCrmPipelineRouteImport.update({
+  id: '/crm/pipeline',
+  path: '/crm/pipeline',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCrmLeadsRoute = AppCrmLeadsRouteImport.update({
+  id: '/crm/leads',
+  path: '/crm/leads',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/crm/leads': typeof AppCrmLeadsRoute
+  '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/live': typeof AppLmsLiveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/crm/leads': typeof AppCrmLeadsRoute
+  '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/live': typeof AppLmsLiveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/crm/leads': typeof AppCrmLeadsRoute
+  '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/live': typeof AppLmsLiveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/app/dashboard'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/dashboard'
+    | '/app/crm/leads'
+    | '/app/crm/pipeline'
+    | '/app/lms/live'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/app/dashboard'
-  id: '__root__' | '/' | '/app' | '/app/dashboard'
+  to:
+    | '/'
+    | '/app'
+    | '/app/dashboard'
+    | '/app/crm/leads'
+    | '/app/crm/pipeline'
+    | '/app/lms/live'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/app/dashboard'
+    | '/app/crm/leads'
+    | '/app/crm/pipeline'
+    | '/app/lms/live'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -81,15 +127,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/lms/live': {
+      id: '/app/lms/live'
+      path: '/lms/live'
+      fullPath: '/app/lms/live'
+      preLoaderRoute: typeof AppLmsLiveRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/crm/pipeline': {
+      id: '/app/crm/pipeline'
+      path: '/crm/pipeline'
+      fullPath: '/app/crm/pipeline'
+      preLoaderRoute: typeof AppCrmPipelineRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/crm/leads': {
+      id: '/app/crm/leads'
+      path: '/crm/leads'
+      fullPath: '/app/crm/leads'
+      preLoaderRoute: typeof AppCrmLeadsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppCrmLeadsRoute: typeof AppCrmLeadsRoute
+  AppCrmPipelineRoute: typeof AppCrmPipelineRoute
+  AppLmsLiveRoute: typeof AppLmsLiveRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppCrmLeadsRoute: AppCrmLeadsRoute,
+  AppCrmPipelineRoute: AppCrmPipelineRoute,
+  AppLmsLiveRoute: AppLmsLiveRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

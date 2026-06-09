@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { leads as seed, type Lead } from "@/mockData/leads";
+export type { Lead } from "@/mockData/leads";
 
 interface State { items: Lead[] }
 const slice = createSlice({

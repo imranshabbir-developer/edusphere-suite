@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChatBubbleLeftIcon, HandRaisedIcon, MicrophoneIcon, NoSymbolIcon, PaperAirplaneIcon, PhoneXMarkIcon, PresentationChartBarIcon, RecordingIcon, UserGroupIcon, VideoCameraIcon, VideoCameraSlashIcon, SignalIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon, HandRaisedIcon, MicrophoneIcon, NoSymbolIcon, PaperAirplaneIcon, PhoneXMarkIcon, PresentationChartBarIcon, StopCircleIcon, UserGroupIcon, VideoCameraIcon, VideoCameraSlashIcon, SignalIcon } from "@heroicons/react/24/outline";
 
 export const Route = createFileRoute("/app/lms/live")({ component: LiveClass });
 
@@ -120,7 +120,7 @@ function LiveClass() {
         <ToolBtn active={mic} onClick={() => setMic(!mic)} on={<MicrophoneIcon className="w-5 h-5" />} off={<NoSymbolIcon className="w-5 h-5" />} label="Mic" />
         <ToolBtn active={cam} onClick={() => setCam(!cam)} on={<VideoCameraIcon className="w-5 h-5" />} off={<VideoCameraSlashIcon className="w-5 h-5" />} label="Camera" />
         <ToolBtn active={hand} onClick={() => setHand(!hand)} on={<HandRaisedIcon className="w-5 h-5" />} off={<HandRaisedIcon className="w-5 h-5" />} label="Raise hand" />
-        <ToolBtn active={recording} onClick={() => setRecording(!recording)} on={<RecordingIcon className="w-5 h-5" />} off={<RecordingIcon className="w-5 h-5" />} label="Record" danger={recording} />
+        <ToolBtn active={recording} onClick={() => setRecording(!recording)} on={<StopCircleIcon className="w-5 h-5" />} off={<StopCircleIcon className="w-5 h-5" />} label="Record" danger={recording} />
         <ToolBtn active={false} onClick={() => alert("Sharing screen…")} on={<PresentationChartBarIcon className="w-5 h-5" />} off={<PresentationChartBarIcon className="w-5 h-5" />} label="Share" />
         <ToolBtn active={showPeople} onClick={() => { setShowPeople(!showPeople); setShowChat(false); }} on={<UserGroupIcon className="w-5 h-5" />} off={<UserGroupIcon className="w-5 h-5" />} label="People" />
         <ToolBtn active={showChat} onClick={() => { setShowChat(!showChat); setShowPeople(false); }} on={<ChatBubbleLeftIcon className="w-5 h-5" />} off={<ChatBubbleLeftIcon className="w-5 h-5" />} label="Chat" />

@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppStudentsListRouteImport } from './routes/app.students.list'
 import { Route as AppLmsLiveRouteImport } from './routes/app.lms.live'
 import { Route as AppLmsLibraryRouteImport } from './routes/app.lms.library'
+import { Route as AppFeesCollectionRouteImport } from './routes/app.fees.collection'
+import { Route as AppFacultyTeachersRouteImport } from './routes/app.faculty.teachers'
+import { Route as AppExamsScheduleRouteImport } from './routes/app.exams.schedule'
 import { Route as AppCrmPipelineRouteImport } from './routes/app.crm.pipeline'
 import { Route as AppCrmLeadsRouteImport } from './routes/app.crm.leads'
+import { Route as AppAttendanceStudentsRouteImport } from './routes/app.attendance.students'
 import { Route as AppAdmissionsApplicationsRouteImport } from './routes/app.admissions.applications'
 
 const AppRoute = AppRouteImport.update({
@@ -28,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
@@ -49,6 +59,21 @@ const AppLmsLibraryRoute = AppLmsLibraryRouteImport.update({
   path: '/lms/library',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFeesCollectionRoute = AppFeesCollectionRouteImport.update({
+  id: '/fees/collection',
+  path: '/fees/collection',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFacultyTeachersRoute = AppFacultyTeachersRouteImport.update({
+  id: '/faculty/teachers',
+  path: '/faculty/teachers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExamsScheduleRoute = AppExamsScheduleRouteImport.update({
+  id: '/exams/schedule',
+  path: '/exams/schedule',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCrmPipelineRoute = AppCrmPipelineRouteImport.update({
   id: '/crm/pipeline',
   path: '/crm/pipeline',
@@ -57,6 +82,11 @@ const AppCrmPipelineRoute = AppCrmPipelineRouteImport.update({
 const AppCrmLeadsRoute = AppCrmLeadsRouteImport.update({
   id: '/crm/leads',
   path: '/crm/leads',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAttendanceStudentsRoute = AppAttendanceStudentsRouteImport.update({
+  id: '/attendance/students',
+  path: '/attendance/students',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAdmissionsApplicationsRoute =
@@ -70,9 +100,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
+  '/app/attendance/students': typeof AppAttendanceStudentsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/exams/schedule': typeof AppExamsScheduleRoute
+  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
+  '/app/fees/collection': typeof AppFeesCollectionRoute
   '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
   '/app/students/list': typeof AppStudentsListRoute
@@ -81,9 +116,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
+  '/app/attendance/students': typeof AppAttendanceStudentsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/exams/schedule': typeof AppExamsScheduleRoute
+  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
+  '/app/fees/collection': typeof AppFeesCollectionRoute
   '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
   '/app/students/list': typeof AppStudentsListRoute
@@ -93,9 +133,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/profile': typeof AppProfileRoute
   '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
+  '/app/attendance/students': typeof AppAttendanceStudentsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/exams/schedule': typeof AppExamsScheduleRoute
+  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
+  '/app/fees/collection': typeof AppFeesCollectionRoute
   '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
   '/app/students/list': typeof AppStudentsListRoute
@@ -106,9 +151,14 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/profile'
     | '/app/admissions/applications'
+    | '/app/attendance/students'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/exams/schedule'
+    | '/app/faculty/teachers'
+    | '/app/fees/collection'
     | '/app/lms/library'
     | '/app/lms/live'
     | '/app/students/list'
@@ -117,9 +167,14 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/profile'
     | '/app/admissions/applications'
+    | '/app/attendance/students'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/exams/schedule'
+    | '/app/faculty/teachers'
+    | '/app/fees/collection'
     | '/app/lms/library'
     | '/app/lms/live'
     | '/app/students/list'
@@ -128,9 +183,14 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/profile'
     | '/app/admissions/applications'
+    | '/app/attendance/students'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/exams/schedule'
+    | '/app/faculty/teachers'
+    | '/app/fees/collection'
     | '/app/lms/library'
     | '/app/lms/live'
     | '/app/students/list'
@@ -156,6 +216,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
     }
     '/app/dashboard': {
       id: '/app/dashboard'
@@ -185,6 +252,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLmsLibraryRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/fees/collection': {
+      id: '/app/fees/collection'
+      path: '/fees/collection'
+      fullPath: '/app/fees/collection'
+      preLoaderRoute: typeof AppFeesCollectionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/faculty/teachers': {
+      id: '/app/faculty/teachers'
+      path: '/faculty/teachers'
+      fullPath: '/app/faculty/teachers'
+      preLoaderRoute: typeof AppFacultyTeachersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/exams/schedule': {
+      id: '/app/exams/schedule'
+      path: '/exams/schedule'
+      fullPath: '/app/exams/schedule'
+      preLoaderRoute: typeof AppExamsScheduleRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/crm/pipeline': {
       id: '/app/crm/pipeline'
       path: '/crm/pipeline'
@@ -199,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmLeadsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/attendance/students': {
+      id: '/app/attendance/students'
+      path: '/attendance/students'
+      fullPath: '/app/attendance/students'
+      preLoaderRoute: typeof AppAttendanceStudentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/admissions/applications': {
       id: '/app/admissions/applications'
       path: '/admissions/applications'
@@ -211,9 +306,14 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppProfileRoute: typeof AppProfileRoute
   AppAdmissionsApplicationsRoute: typeof AppAdmissionsApplicationsRoute
+  AppAttendanceStudentsRoute: typeof AppAttendanceStudentsRoute
   AppCrmLeadsRoute: typeof AppCrmLeadsRoute
   AppCrmPipelineRoute: typeof AppCrmPipelineRoute
+  AppExamsScheduleRoute: typeof AppExamsScheduleRoute
+  AppFacultyTeachersRoute: typeof AppFacultyTeachersRoute
+  AppFeesCollectionRoute: typeof AppFeesCollectionRoute
   AppLmsLibraryRoute: typeof AppLmsLibraryRoute
   AppLmsLiveRoute: typeof AppLmsLiveRoute
   AppStudentsListRoute: typeof AppStudentsListRoute
@@ -221,9 +321,14 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppProfileRoute: AppProfileRoute,
   AppAdmissionsApplicationsRoute: AppAdmissionsApplicationsRoute,
+  AppAttendanceStudentsRoute: AppAttendanceStudentsRoute,
   AppCrmLeadsRoute: AppCrmLeadsRoute,
   AppCrmPipelineRoute: AppCrmPipelineRoute,
+  AppExamsScheduleRoute: AppExamsScheduleRoute,
+  AppFacultyTeachersRoute: AppFacultyTeachersRoute,
+  AppFeesCollectionRoute: AppFeesCollectionRoute,
   AppLmsLibraryRoute: AppLmsLibraryRoute,
   AppLmsLiveRoute: AppLmsLiveRoute,
   AppStudentsListRoute: AppStudentsListRoute,

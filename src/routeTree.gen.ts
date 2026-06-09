@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppStudentsListRouteImport } from './routes/app.students.list'
 import { Route as AppLmsLiveRouteImport } from './routes/app.lms.live'
+import { Route as AppLmsLibraryRouteImport } from './routes/app.lms.library'
 import { Route as AppCrmPipelineRouteImport } from './routes/app.crm.pipeline'
 import { Route as AppCrmLeadsRouteImport } from './routes/app.crm.leads'
+import { Route as AppAdmissionsApplicationsRouteImport } from './routes/app.admissions.applications'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -31,9 +34,19 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppStudentsListRoute = AppStudentsListRouteImport.update({
+  id: '/students/list',
+  path: '/students/list',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLmsLiveRoute = AppLmsLiveRouteImport.update({
   id: '/lms/live',
   path: '/lms/live',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLmsLibraryRoute = AppLmsLibraryRouteImport.update({
+  id: '/lms/library',
+  path: '/lms/library',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCrmPipelineRoute = AppCrmPipelineRouteImport.update({
@@ -46,31 +59,46 @@ const AppCrmLeadsRoute = AppCrmLeadsRouteImport.update({
   path: '/crm/leads',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdmissionsApplicationsRoute =
+  AppAdmissionsApplicationsRouteImport.update({
+    id: '/admissions/applications',
+    path: '/admissions/applications',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
+  '/app/students/list': typeof AppStudentsListRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
+  '/app/students/list': typeof AppStudentsListRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
   '/app/crm/leads': typeof AppCrmLeadsRoute
   '/app/crm/pipeline': typeof AppCrmPipelineRoute
+  '/app/lms/library': typeof AppLmsLibraryRoute
   '/app/lms/live': typeof AppLmsLiveRoute
+  '/app/students/list': typeof AppStudentsListRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -78,25 +106,34 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/admissions/applications'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/lms/library'
     | '/app/lms/live'
+    | '/app/students/list'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/admissions/applications'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/lms/library'
     | '/app/lms/live'
+    | '/app/students/list'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/app/dashboard'
+    | '/app/admissions/applications'
     | '/app/crm/leads'
     | '/app/crm/pipeline'
+    | '/app/lms/library'
     | '/app/lms/live'
+    | '/app/students/list'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -127,11 +164,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/students/list': {
+      id: '/app/students/list'
+      path: '/students/list'
+      fullPath: '/app/students/list'
+      preLoaderRoute: typeof AppStudentsListRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/lms/live': {
       id: '/app/lms/live'
       path: '/lms/live'
       fullPath: '/app/lms/live'
       preLoaderRoute: typeof AppLmsLiveRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/lms/library': {
+      id: '/app/lms/library'
+      path: '/lms/library'
+      fullPath: '/app/lms/library'
+      preLoaderRoute: typeof AppLmsLibraryRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/crm/pipeline': {
@@ -148,21 +199,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmLeadsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admissions/applications': {
+      id: '/app/admissions/applications'
+      path: '/admissions/applications'
+      fullPath: '/app/admissions/applications'
+      preLoaderRoute: typeof AppAdmissionsApplicationsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppAdmissionsApplicationsRoute: typeof AppAdmissionsApplicationsRoute
   AppCrmLeadsRoute: typeof AppCrmLeadsRoute
   AppCrmPipelineRoute: typeof AppCrmPipelineRoute
+  AppLmsLibraryRoute: typeof AppLmsLibraryRoute
   AppLmsLiveRoute: typeof AppLmsLiveRoute
+  AppStudentsListRoute: typeof AppStudentsListRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppAdmissionsApplicationsRoute: AppAdmissionsApplicationsRoute,
   AppCrmLeadsRoute: AppCrmLeadsRoute,
   AppCrmPipelineRoute: AppCrmPipelineRoute,
+  AppLmsLibraryRoute: AppLmsLibraryRoute,
   AppLmsLiveRoute: AppLmsLiveRoute,
+  AppStudentsListRoute: AppStudentsListRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -174,3 +238,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

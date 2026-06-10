@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { AcademicCapIcon, ArrowRightIcon, EnvelopeIcon, LockClosedIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, EyeSlashIcon, AcademicCapIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { login, VALID_EMAILS } from "@/redux/slices/authSlice";
+import illustration from "@/assets/login-illustration.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,137 +26,109 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const QUICK = [
-  { role: "Admin", email: "admin@test.com", desc: "Full org control" },
-  { role: "Teacher", email: "teacher@test.com", desc: "Classes & grading" },
-  { role: "Faculty", email: "faculty@test.com", desc: "Operations & records" },
-  { role: "Student", email: "student@test.com", desc: "Learn & track" },
+  { role: "Admin", email: "admin@test.com" },
+  { role: "Teacher", email: "teacher@test.com" },
+  { role: "Faculty", email: "faculty@test.com" },
+  { role: "Student", email: "student@test.com" },
 ];
 
 function LoginPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((s) => s.auth.user);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: { email: "", password: "" },
+    resolver: zodResolver(schema), defaultValues: { email: "", password: "" },
   });
 
   useEffect(() => { if (user) navigate({ to: "/app/dashboard" }); }, [user, navigate]);
 
   const onSubmit = (data: FormData) => {
     const email = data.email.toLowerCase().trim();
-    if (!VALID_EMAILS.includes(email)) {
-      setError(`Use one of: ${VALID_EMAILS.join(", ")}`);
-      return;
-    }
-    setError("");
-    dispatch(login(email));
-    navigate({ to: "/app/dashboard" });
+    if (!VALID_EMAILS.includes(email)) { setError(`Use one of: ${VALID_EMAILS.join(", ")}`); return; }
+    setError(""); dispatch(login(email)); navigate({ to: "/app/dashboard" });
   };
-
-  const quick = (email: string) => {
-    setValue("email", email);
-    dispatch(login(email));
-    navigate({ to: "/app/dashboard" });
-  };
+  const quick = (email: string) => { setValue("email", email); dispatch(login(email)); navigate({ to: "/app/dashboard" }); };
 
   return (
-    <div className="min-h-screen flex bg-background">
-      {/* Brand panel */}
-      <div className="hidden lg:flex flex-col w-1/2 relative overflow-hidden gradient-hero text-primary-foreground p-12">
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_30%_20%,white,transparent_50%)]" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-accent/40 blur-3xl" />
-        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-primary-glow/40 blur-3xl" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20">
-              <AcademicCapIcon className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="font-bold text-xl">EduOne</p>
-              <p className="text-xs opacity-80">Education ERP · LMS · SIS · CRM</p>
-            </div>
-          </div>
-        </div>
-        <div className="relative z-10 mt-auto space-y-6">
-          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="text-4xl xl:text-5xl font-bold leading-tight tracking-tight">
-            Run your entire campus<br />from one beautiful platform.
-          </motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
-            className="text-lg opacity-90 max-w-md">
-            Admissions, academics, attendance, exams, fees, payroll, HR, library, hostel — orchestrated end-to-end.
-          </motion.p>
-          <div className="grid grid-cols-3 gap-4 max-w-md">
-            {[["12k+", "Students"], ["480", "Courses"], ["98%", "Uptime"]].map(([v, l]) => (
-              <div key={l} className="glass-card rounded-xl p-3 border-white/20">
-                <p className="text-2xl font-bold">{v}</p>
-                <p className="text-xs opacity-80">{l}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-          <div className="flex lg:hidden items-center gap-2 mb-8">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 sm:p-8"
+      style={{
+        background:
+          "radial-gradient(circle at 20% 30%, oklch(0.78 0.14 250 / 0.55), transparent 55%), radial-gradient(circle at 80% 70%, oklch(0.72 0.13 188 / 0.45), transparent 50%), linear-gradient(135deg, oklch(0.585 0.214 263), oklch(0.45 0.18 270))",
+      }}
+    >
+      <motion.div initial={{ opacity: 0, y: 18, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.4 }}
+        className="w-full max-w-5xl grid md:grid-cols-2 bg-card rounded-3xl shadow-2xl overflow-hidden border border-white/30">
+        {/* Form */}
+        <div className="p-8 sm:p-12 flex flex-col justify-center">
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-elegant">
               <AcademicCapIcon className="w-5 h-5 text-primary-foreground" />
             </div>
             <p className="font-bold text-lg">EduOne</p>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4">
-            <SparklesIcon className="w-3.5 h-3.5" /> Demo workspace
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight">Welcome back</h2>
-          <p className="text-muted-foreground mt-2">Sign in to your EduOne workspace.</p>
+          <h1 className="text-4xl font-bold tracking-tight">Welcome Back!</h1>
+          <p className="text-muted-foreground mt-2">Login to your Education ERP Dashboard</p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div>
-              <label className="text-sm font-medium">Email</label>
-              <div className="relative mt-1.5">
-                <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input {...register("email")} placeholder="admin@test.com"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
-              </div>
+              <label className="text-sm font-semibold">Email</label>
+              <input {...register("email")} placeholder="Enter email"
+                className="mt-2 w-full px-4 py-3 rounded-xl border border-border bg-muted/40 focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition" />
               {errors.email && <p className="text-xs text-danger mt-1">{errors.email.message}</p>}
             </div>
             <div>
-              <label className="text-sm font-medium">Password <span className="text-muted-foreground font-normal">(optional in demo)</span></label>
-              <div className="relative mt-1.5">
-                <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input type="password" {...register("password")} placeholder="••••••••"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" />
+              <label className="text-sm font-semibold">Password</label>
+              <div className="relative mt-2">
+                <input type={showPwd ? "text" : "password"} {...register("password")} placeholder="Enter Password"
+                  className="w-full px-4 py-3 pr-11 rounded-xl border border-border bg-muted/40 focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition" />
+                <button type="button" onClick={() => setShowPwd((s) => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground">
+                  {showPwd ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                </button>
               </div>
             </div>
+
             {error && <p className="text-sm text-danger bg-danger/10 rounded-lg px-3 py-2">{error}</p>}
-            <button type="submit" className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold shadow-elegant hover:shadow-glow transition inline-flex items-center justify-center gap-2">
-              Sign in <ArrowRightIcon className="w-4 h-4" />
+
+            <button type="submit"
+              className="w-full py-3 rounded-xl gradient-primary text-primary-foreground font-semibold shadow-elegant hover:shadow-glow transition">
+              Login
             </button>
+
+            <button type="button" className="text-sm font-semibold text-primary hover:underline">Forgot Password?</button>
           </form>
 
           <div className="my-6 flex items-center gap-3">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground uppercase tracking-wider">Quick demo</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">Quick demo access</span>
             <div className="flex-1 h-px bg-border" />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             {QUICK.map((q) => (
               <button key={q.email} onClick={() => quick(q.email)}
-                className="text-left p-3 rounded-xl border border-border hover:border-primary hover:bg-primary/5 transition group">
+                className="text-left p-2.5 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition group">
                 <p className="font-semibold text-sm group-hover:text-primary">{q.role}</p>
                 <p className="text-[11px] text-muted-foreground truncate">{q.email}</p>
               </button>
             ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+
+        {/* Illustration */}
+        <div className="hidden md:flex items-center justify-center p-10 relative"
+          style={{ background: "linear-gradient(135deg, oklch(0.95 0.04 250), oklch(0.92 0.06 200))" }}>
+          <div className="absolute inset-0 opacity-30"
+            style={{ backgroundImage: "radial-gradient(circle at 20% 20%, oklch(0.78 0.14 250 / 0.6), transparent 60%)" }} />
+          <img src={illustration} alt="Team collaboration" className="relative max-w-full max-h-[420px] object-contain drop-shadow-xl"
+            width={1024} height={1024} />
+        </div>
+      </motion.div>
     </div>
   );
 }

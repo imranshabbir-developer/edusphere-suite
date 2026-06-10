@@ -16,7 +16,7 @@ interface FormProps {
   onClose: () => void;
   title: string;
   fields: FieldDef[];
-  initial?: Record<string, unknown>;
+  initial?: object | null;
   onSubmit: (values: Record<string, unknown>) => void;
   submitLabel?: string;
 }
@@ -27,7 +27,7 @@ export function RecordFormModal({ open, onClose, title, fields, initial, onSubmi
 
   useEffect(() => {
     if (open) {
-      setValues(initial ?? Object.fromEntries(fields.map((f) => [f.key, ""])));
+      setValues((initial as Record<string, unknown>) ?? Object.fromEntries(fields.map((f) => [f.key, ""])));
       setErrors({});
     }
   }, [open, initial, fields]);
@@ -84,14 +84,14 @@ interface DetailProps {
   open: boolean;
   onClose: () => void;
   title?: string;
-  record: Record<string, unknown> | null;
+  record: object | null | undefined;
   exclude?: string[];
   extra?: ReactNode;
 }
 
 export function RecordDetailModal({ open, onClose, title = "Record details", record, exclude = [], extra }: DetailProps) {
   if (!record) return null;
-  const entries = Object.entries(record).filter(([k, v]) => !exclude.includes(k) && typeof v !== "object");
+  const entries = Object.entries(record as Record<string, unknown>).filter(([k, v]) => !exclude.includes(k) && typeof v !== "object");
   return (
     <Modal open={open} onClose={onClose} title={title} size="lg">
       <div className="grid grid-cols-2 gap-3">

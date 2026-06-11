@@ -10,6 +10,7 @@ import { login, VALID_EMAILS, roleForEmail } from "@/store/slices/authSlice";
 import { roleDashboardPath } from "@/utils/roleRoutes";
 import { LoginAnimation } from "@/components/LoginAnimation";
 import { LoginFloatingIcons } from "@/components/LoginFloatingIcons";
+import { ForgotPasswordModal } from "@/components/ForgotPasswordModal";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -44,6 +45,7 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [demoRole, setDemoRole] = useState("");
+  const [forgotOpen, setForgotOpen] = useState(false);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -152,7 +154,7 @@ function LoginPage() {
                 <option value="">Select a role</option>
                 {QUICK.map((q) => (
                   <option key={q.email} value={q.email}>
-                    {q.role} — {q.email}
+                    {q.role}
                   </option>
                 ))}
               </select>
@@ -168,7 +170,11 @@ function LoginPage() {
             </button>
 
             <div className="flex justify-center sm:justify-start">
-              <button type="button" className="text-xs sm:text-sm font-semibold text-primary hover:underline touch-manipulation">
+              <button
+                type="button"
+                onClick={() => setForgotOpen(true)}
+                className="text-xs sm:text-sm font-semibold text-primary hover:underline touch-manipulation"
+              >
                 Forgot Password?
               </button>
             </div>
@@ -190,6 +196,8 @@ function LoginPage() {
           <LoginCredits className="relative mt-4" />
         </div>
       </motion.div>
+
+      <ForgotPasswordModal open={forgotOpen} onClose={() => setForgotOpen(false)} />
     </div>
   );
 }

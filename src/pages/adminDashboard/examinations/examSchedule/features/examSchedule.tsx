@@ -1,9 +1,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useNavigate } from "@tanstack/react-router";
 import { DataTable } from "@/components/ui/DataTable";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { StatsCard } from "@/components/ui/StatsCard";
-import { RecordFormModal, RecordDetailModal, ConfirmDialog, type FieldDef } from "@/components/ui/RecordDialogs";
+import { RecordFormModal, type FieldDef } from "@/components/ui/RecordDialogs";
+import { ConfirmDeleteModal } from "@/components/records/ConfirmDeleteModal";
+import { ActionFeedbackModal, type FeedbackAction } from "@/components/records/ActionFeedbackModal";
+import { usePersistedRecords } from "@/hooks/usePersistedRecords";
+import { useAppSelector } from "@/store/store";
 import { exams as seed, type Exam } from "@/mockData";
 import { CalendarIcon, ClockIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
@@ -15,11 +20,22 @@ const TYPES: Exam["type"][] = ["Mid-term", "Final", "Quiz", "Practical"];
 const STATUSES: Exam["status"][] = ["Scheduled", "Live", "Completed"];
 
 export default function ExamSchedule() {
-  const [data, setData] = useState<Exam[]>(seed);
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
+  const navigate = useNavigate();
+  const storageKey = `${role}/exams/schedule`;
+  const [data, setData] = usePersistedRecords<Exam>(storageKey, seed);
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Exam | null>(null);
-  const [viewing, setViewing] = useState<Exam | null>(null);
   const [deleting, setDeleting] = useState<Exam | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackAction | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const goDetail = (id: string, edit = false) => {
+    navigate({
+      to: "/$role/exams/schedule/$id",
+      params: { role, id },
+      search: edit ? { edit: "1" } : {},
+    });
+  };
 
   const fields: FieldDef[] = [
     { key: "title", label: "Exam title", required: true, span: 2 },
@@ -31,8 +47,7 @@ export default function ExamSchedule() {
   ];
 
   const submit = (v: Record<string, unknown>) => {
-    if (editing) setData((d) => d.map((e) => e.id === editing.id ? { ...e, ...v } as Exam : e));
-    else setData((d) => [{
+    setData((d) => [{
       id: `EXM-${Date.now().toString().slice(-5)}`,
       title: String(v.title ?? "New Exam"),
       program: String(v.program ?? PROGRAMS[0]),
@@ -41,7 +56,9 @@ export default function ExamSchedule() {
       duration: Number(v.duration ?? 60),
       status: (v.status as Exam["status"]) ?? "Scheduled",
     }, ...d]);
-    setEditing(null);
+    setFormOpen(false);
+    setFeedback("created");
+    setFeedbackOpen(true);
   };
 
   const columns: ColumnDef<Exam>[] = [
@@ -62,7 +79,7 @@ export default function ExamSchedule() {
           <h1 className="text-2xl font-bold tracking-tight">Exam Schedule</h1>
           <p className="text-muted-foreground text-sm">All scheduled, live and completed exams.</p>
         </div>
-        <button onClick={() => { setEditing(null); setFormOpen(true); }}
+        <button onClick={() => setFormOpen(true)}
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
           <PlusIcon className="w-4 h-4" /> New Exam
         </button>
@@ -75,7 +92,7 @@ export default function ExamSchedule() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {upcoming.slice(0, 6).map((e) => (
-          <button key={e.id} onClick={() => setViewing(e)} className="text-left glass-card rounded-2xl p-4 hover:shadow-elegant transition">
+          <button key={e.id} onClick={() => goDetail(e.id)} className="text-left glass-card rounded-2xl p-4 hover:shadow-elegant transition">
             <div className="flex items-start justify-between">
               <div>
                 <Badge tone="accent">{e.type}</Badge>
@@ -99,19 +116,22 @@ export default function ExamSchedule() {
           { id: "type", label: "Type", options: TYPES as unknown as string[] },
           { id: "status", label: "Status", options: STATUSES as unknown as string[] },
         ]}
-        onRowClick={(e) => setViewing(e)}
-        onView={(e) => setViewing(e)}
-        onEdit={(e) => { setEditing(e); setFormOpen(true); }}
+        onRowClick={(e) => goDetail(e.id)}
+        onView={(e) => goDetail(e.id)}
+        onEdit={(e) => goDetail(e.id, true)}
         onDelete={(e) => setDeleting(e)}
       />
 
-      <RecordFormModal open={formOpen} onClose={() => { setFormOpen(false); setEditing(null); }}
-        title={editing ? "Edit exam" : "Schedule new exam"} fields={fields} initial={editing ?? undefined}
-        onSubmit={submit} submitLabel={editing ? "Save changes" : "Create exam"} />
-      <RecordDetailModal open={!!viewing} onClose={() => setViewing(null)} title={viewing?.title ?? "Exam"} record={viewing as unknown as Record<string, unknown>} />
-      <ConfirmDialog open={!!deleting} onClose={() => setDeleting(null)}
-        onConfirm={() => deleting && setData((d) => d.filter((x) => x.id !== deleting.id))}
-        message={`Delete "${deleting?.title}"?`} />
+      <RecordFormModal open={formOpen} onClose={() => setFormOpen(false)}
+        title="Schedule new exam" fields={fields} onSubmit={submit} submitLabel="Create exam" />
+      <ConfirmDeleteModal open={!!deleting} onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) setData((d) => d.filter((x) => x.id !== deleting.id));
+          setFeedback("deleted");
+          setFeedbackOpen(true);
+        }}
+        recordName={deleting?.title} />
+      <ActionFeedbackModal action={feedback} open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

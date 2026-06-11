@@ -97,6 +97,17 @@
   --sidebar-accent: oklch(0.28 0.05 262);
   --sidebar-accent-foreground: oklch(0.99 0.005 240);
   --sidebar-border: oklch(0.3 0.04 262);
+  --gradient-sidebar: linear-gradient(
+    168deg,
+    color-mix(in oklab, var(--sidebar-accent) 55%, var(--sidebar)) 0%,
+    var(--sidebar) 42%,
+    color-mix(in oklab, var(--sidebar) 82%, oklch(0.14 0.03 262)) 100%
+  );
+  --gradient-sidebar-glow: radial-gradient(
+    ellipse 90% 65% at 0% 0%,
+    color-mix(in oklab, var(--primary) 11%, transparent),
+    transparent 58%
+  );
 
   --chart-1: oklch(0.585 0.214 263);
   --chart-2: oklch(0.72 0.13 188);
@@ -144,6 +155,17 @@
   --sidebar-accent: oklch(0.22 0.04 262);
   --sidebar-accent-foreground: oklch(0.99 0.005 240);
   --sidebar-border: oklch(1 0 0 / 8%);
+  --gradient-sidebar: linear-gradient(
+    168deg,
+    color-mix(in oklab, var(--sidebar-accent) 48%, var(--sidebar)) 0%,
+    var(--sidebar) 40%,
+    color-mix(in oklab, var(--sidebar) 78%, oklch(0.07 0.02 262)) 100%
+  );
+  --gradient-sidebar-glow: radial-gradient(
+    ellipse 90% 65% at 0% 0%,
+    color-mix(in oklab, var(--primary) 13%, transparent),
+    transparent 58%
+  );
 
   --glass-bg: color-mix(in oklab, var(--card) 50%, transparent);
   --glass-border: color-mix(in oklab, var(--foreground) 12%, transparent);
@@ -172,6 +194,11 @@
 
 @utility gradient-hero {
   background-image: var(--gradient-hero);
+}
+
+@utility sidebar-gradient {
+  background-color: var(--sidebar);
+  background-image: var(--gradient-sidebar), var(--gradient-sidebar-glow);
 }
 
 @utility shadow-elegant {

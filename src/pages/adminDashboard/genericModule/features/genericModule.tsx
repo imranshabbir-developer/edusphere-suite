@@ -1,15 +1,18 @@
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useAppSelector } from "@/store/store";
 import { SIDEBAR } from "@/global/AppLayout/sidebarConfig";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { DataTable } from "@/components/ui/DataTable";
-import { RecordFormModal, RecordDetailModal, ConfirmDialog, type FieldDef } from "@/components/ui/RecordDialogs";
+import { RecordFormModal, type FieldDef } from "@/components/ui/RecordDialogs";
+import { ConfirmDeleteModal } from "@/components/records/ConfirmDeleteModal";
+import { ActionFeedbackModal, type FeedbackAction } from "@/components/records/ActionFeedbackModal";
+import { GenericRecordDetail } from "./genericRecordDetail";
+import { parseSplatWithId } from "@/utils/recordStorage";
+import { usePersistedRecords } from "@/hooks/usePersistedRecords";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useMemo, useState, useEffect } from "react";
-
-
+import { useMemo, useState } from "react";
 
 interface Row {
   id: string; name: string; reference: string; owner: string;
@@ -41,26 +44,55 @@ function seedRows(seed: string): Row[] {
 
 export default function GenericModule() {
   const params = useParams({ from: "/$role/$" });
+  const search = useSearch({ strict: false }) as { edit?: string };
   const splat = (params as { _splat?: string })._splat ?? "";
   const urlRole = (params as { role?: string }).role ?? "admin";
   const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
-  const path = `/${urlRole}/${splat}`;
+  const navigate = useNavigate();
+
+  const { modulePath, recordId } = parseSplatWithId(splat);
+  const path = `/${urlRole}/${modulePath || splat}`;
+
+  const storageKey = `${urlRole}/${modulePath || splat || "module"}`;
+  const seedKey = modulePath || splat || "module";
+
   const { groupLabel, label } = useMemo(() => {
     for (const g of SIDEBAR[role]) {
       const found = g.items.find((i) => i.to === path);
       if (found) return { groupLabel: g.label, label: found.label };
     }
-    const seg = splat.split("/").filter(Boolean);
+    const seg = (modulePath || splat).split("/").filter(Boolean);
     return { groupLabel: seg[0]?.replace(/-/g, " ") ?? "Module", label: seg[seg.length - 1]?.replace(/-/g, " ") ?? "Page" };
-  }, [path, role, splat]);
+  }, [path, role, modulePath, splat]);
 
-  const [rows, setRows] = useState<Row[]>([]);
-  useEffect(() => { setRows(seedRows(splat || "module")); }, [splat]);
-
+  const [rows, setRows] = usePersistedRecords<Row>(storageKey, seedRows(seedKey));
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Row | null>(null);
-  const [viewing, setViewing] = useState<Row | null>(null);
   const [deleting, setDeleting] = useState<Row | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackAction | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const totals = useMemo(() => {
+    const active = rows.filter((r) => r.status === "Active").length;
+    const pending = rows.filter((r) => r.status === "Pending").length;
+    const val = rows.reduce((a, b) => a + b.value, 0);
+    return { active, pending, val };
+  }, [rows]);
+
+  const moduleSegment = modulePath || splat || "module";
+
+  if (recordId) {
+    return (
+      <GenericRecordDetail
+        role={urlRole}
+        modulePath={moduleSegment}
+        recordId={recordId}
+        label={label}
+        initialEdit={search.edit === "1"}
+        rows={rows}
+        setRows={setRows}
+      />
+    );
+  }
 
   const cap = (s: string) => s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
   const labelCap = cap(label);
@@ -75,22 +107,29 @@ export default function GenericModule() {
     { key: "updated", label: "Date", type: "date" },
   ];
 
+  const goDetail = (id: string, edit = false) => {
+    navigate({
+      to: "/$role/$",
+      params: { role: urlRole, _splat: `${modulePath || splat}/${id}` },
+      search: edit ? { edit: "1" } : {},
+    });
+  };
+
   const submit = (vals: Record<string, unknown>) => {
-    if (editing) {
-      setRows((r) => r.map((x) => x.id === editing.id ? { ...x, ...vals } as Row : x));
-    } else {
-      const id = `${splat.slice(0, 3).toUpperCase()}-${Date.now().toString().slice(-5)}`;
-      setRows((r) => [{
-        id, name: String(vals.name ?? "Untitled"),
-        reference: String(vals.reference ?? `REF-${Date.now().toString().slice(-4)}`),
-        owner: String(vals.owner ?? OWNERS[0]),
-        category: String(vals.category ?? CATS[0]),
-        status: String(vals.status ?? "Active"),
-        updated: vals.updated ? String(vals.updated) : new Date().toLocaleDateString(),
-        value: Number(vals.value ?? 0),
-      }, ...r]);
-    }
-    setEditing(null);
+    const seedKey = modulePath || splat || "module";
+    const id = `${seedKey.slice(0, 3).toUpperCase()}-${Date.now().toString().slice(-5)}`;
+    setRows((r) => [{
+      id, name: String(vals.name ?? "Untitled"),
+      reference: String(vals.reference ?? `REF-${Date.now().toString().slice(-4)}`),
+      owner: String(vals.owner ?? OWNERS[0]),
+      category: String(vals.category ?? CATS[0]),
+      status: String(vals.status ?? "Active"),
+      updated: vals.updated ? String(vals.updated) : new Date().toLocaleDateString(),
+      value: Number(vals.value ?? 0),
+    }, ...r]);
+    setFormOpen(false);
+    setFeedback("created");
+    setFeedbackOpen(true);
   };
 
   const columns: ColumnDef<Row>[] = [
@@ -104,13 +143,6 @@ export default function GenericModule() {
     { header: "Value", accessorKey: "value", cell: ({ getValue }) => `$${Number(getValue()).toLocaleString()}` },
   ];
 
-  const totals = useMemo(() => {
-    const active = rows.filter((r) => r.status === "Active").length;
-    const pending = rows.filter((r) => r.status === "Pending").length;
-    const val = rows.reduce((a, b) => a + b.value, 0);
-    return { active, pending, val };
-  }, [rows]);
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -119,7 +151,7 @@ export default function GenericModule() {
           <h1 className="text-2xl font-bold tracking-tight">{labelCap}</h1>
           <p className="text-muted-foreground text-sm">Manage {labelCap.toLowerCase()} across your organization.</p>
         </div>
-        <button onClick={() => { setEditing(null); setFormOpen(true); }}
+        <button onClick={() => setFormOpen(true)}
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
           <PlusIcon className="w-4 h-4" /> New {labelCap.replace(/s$/, "")}
         </button>
@@ -135,37 +167,37 @@ export default function GenericModule() {
       <DataTable
         data={rows} columns={columns}
         searchPlaceholder={`Search ${labelCap.toLowerCase()}…`}
-        exportFilename={splat.replace(/\//g, "-") || "records"}
+        exportFilename={(modulePath || splat).replace(/\//g, "-") || "records"}
         filters={[
           { id: "status", label: "Status", options: STATUSES },
           { id: "category", label: "Category", options: CATS },
           { id: "owner", label: "Owner", options: OWNERS },
         ]}
-        onRowClick={(r) => setViewing(r)}
-        onView={(r) => setViewing(r)}
-        onEdit={(r) => { setEditing(r); setFormOpen(true); }}
+        onRowClick={(r) => goDetail(r.id)}
+        onView={(r) => goDetail(r.id)}
+        onEdit={(r) => goDetail(r.id, true)}
         onDelete={(r) => setDeleting(r)}
       />
 
       <RecordFormModal
         open={formOpen}
-        onClose={() => { setFormOpen(false); setEditing(null); }}
-        title={editing ? `Edit ${labelCap}` : `Create new ${labelCap.replace(/s$/, "").toLowerCase()}`}
+        onClose={() => setFormOpen(false)}
+        title={`Create new ${labelCap.replace(/s$/, "").toLowerCase()}`}
         fields={fields}
-        initial={editing ?? undefined}
         onSubmit={submit}
-        submitLabel={editing ? "Save changes" : "Create"}
+        submitLabel="Create"
       />
-      <RecordDetailModal
-        open={!!viewing} onClose={() => setViewing(null)}
-        title={viewing?.name ?? "Record details"}
-        record={viewing as unknown as Record<string, unknown>}
+      <ConfirmDeleteModal
+        open={!!deleting}
+        onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) setRows((r) => r.filter((x) => x.id !== deleting.id));
+          setFeedback("deleted");
+          setFeedbackOpen(true);
+        }}
+        recordName={deleting?.name}
       />
-      <ConfirmDialog
-        open={!!deleting} onClose={() => setDeleting(null)}
-        onConfirm={() => deleting && setRows((r) => r.filter((x) => x.id !== deleting.id))}
-        message={`Delete "${deleting?.name}"? This cannot be undone.`}
-      />
+      <ActionFeedbackModal action={feedback} open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

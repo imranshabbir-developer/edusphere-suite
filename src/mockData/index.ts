@@ -181,3 +181,131 @@ export const leadSourceDist = [
   { name: "Walk-in", value: 6 },
   { name: "Campaign", value: 4 },
 ];
+
+// ── Teacher dashboard ──────────────────────────────────────────────
+export const teacherEngagement = [
+  { day: "Mon", participation: 78, attendance: 92 },
+  { day: "Tue", participation: 82, attendance: 88 },
+  { day: "Wed", participation: 75, attendance: 90 },
+  { day: "Thu", participation: 88, attendance: 94 },
+  { day: "Fri", participation: 71, attendance: 86 },
+  { day: "Sat", participation: 65, attendance: 80 },
+];
+
+export const teacherSubmissionsByCourse = [
+  { course: "Intro to AI", submitted: 52, pending: 8 },
+  { course: "Data Structures", submitted: 48, pending: 12 },
+  { course: "Machine Learning", submitted: 41, pending: 5 },
+  { course: "Cloud Computing", submitted: 38, pending: 14 },
+];
+
+export const teacherGradeDist = [
+  { name: "A", value: 28 },
+  { name: "B", value: 35 },
+  { name: "C", value: 22 },
+  { name: "D", value: 10 },
+  { name: "F", value: 5 },
+];
+
+export const teacherPendingGrading = [
+  { id: 1, student: "Aarav Sharma", assignment: "Lab Report #4", course: "Intro to AI", submitted: "2h ago" },
+  { id: 2, student: "Saanvi Verma", assignment: "Problem Set 7", course: "Data Structures", submitted: "4h ago" },
+  { id: 3, student: "Vihaan Patel", assignment: "Essay Draft", course: "Machine Learning", submitted: "Yesterday" },
+  { id: 4, student: "Ananya Singh", assignment: "Case Study", course: "Cloud Computing", submitted: "Yesterday" },
+  { id: 5, student: "Arjun Reddy", assignment: "Group Project", course: "Intro to AI", submitted: "2d ago" },
+];
+
+export const teacherClassSchedule = [
+  { id: 1, course: "Intro to AI", time: "9:00 AM", room: "Hall A-204", section: "B.Tech CSE-A" },
+  { id: 2, course: "Data Structures", time: "11:00 AM", room: "Online", section: "B.Tech CSE-B" },
+  { id: 3, course: "Machine Learning", time: "1:30 PM", room: "Lab C-302", section: "M.Tech AI" },
+  { id: 4, course: "Cloud Computing", time: "3:00 PM", room: "Hall B-101", section: "B.Tech CSE-A" },
+];
+
+// ── Faculty dashboard ──────────────────────────────────────────────
+export const facultyApplicationStatus = [
+  { name: "Submitted", value: 120 },
+  { name: "Under Review", value: 86 },
+  { name: "Approved", value: 64 },
+  { name: "Waitlisted", value: 38 },
+  { name: "Rejected", value: 34 },
+];
+
+export const facultyFeeTrend = [
+  { month: "Jul", collected: 38000, pending: 14000 },
+  { month: "Aug", collected: 42000, pending: 12000 },
+  { month: "Sep", collected: 51000, pending: 9000 },
+  { month: "Oct", collected: 48000, pending: 11000 },
+  { month: "Nov", collected: 54000, pending: 8000 },
+  { month: "Dec", collected: 48000, pending: 15000 },
+];
+
+export const facultyDeptWorkload = [
+  { dept: "Admissions", tasks: 42 },
+  { dept: "Student Records", tasks: 28 },
+  { dept: "Fee Desk", tasks: 35 },
+  { dept: "Library", tasks: 18 },
+  { dept: "Examinations", tasks: 24 },
+];
+
+export const facultyPendingAdmissions = admissions
+  .filter((a) => a.status === "Submitted" || a.status === "Under Review")
+  .slice(0, 6);
+
+export const facultyTodayTasks = [
+  { id: 1, task: "Verify admission documents", dept: "Admissions", priority: "High", due: "Today" },
+  { id: 2, task: "Process fee installment", dept: "Fee Desk", priority: "Medium", due: "Today" },
+  { id: 3, task: "Issue library cards (batch 2024)", dept: "Library", priority: "Low", due: "Today" },
+  { id: 4, task: "Update exam hall allocation", dept: "Examinations", priority: "High", due: "Tomorrow" },
+  { id: 5, task: "Respond to student inquiry", dept: "Student Records", priority: "Medium", due: "Today" },
+];
+
+// ── Student dashboard ──────────────────────────────────────────────
+export const studentCourseProgress = [
+  { course: "Intro to AI", progress: 72 },
+  { course: "Data Structures", progress: 58 },
+  { course: "Linear Algebra", progress: 85 },
+  { course: "Marketing 101", progress: 41 },
+  { course: "World Literature", progress: 67 },
+  { course: "Machine Learning", progress: 33 },
+];
+
+export const studentStudyHours = [
+  { day: "Mon", hours: 3.5 },
+  { day: "Tue", hours: 4.2 },
+  { day: "Wed", hours: 2.8 },
+  { day: "Thu", hours: 5.0 },
+  { day: "Fri", hours: 3.1 },
+  { day: "Sat", hours: 6.5 },
+  { day: "Sun", hours: 2.0 },
+];
+
+export const studentGradeTrend = [
+  { term: "Fall '23", gpa: 3.6 },
+  { term: "Spring '24", gpa: 3.7 },
+  { term: "Summer '24", gpa: 3.8 },
+  { term: "Fall '24", gpa: 3.84 },
+];
+
+export const studentAssignmentsDue = assignments
+  .filter((a) => a.status === "Open")
+  .slice(0, 5)
+  .map((a) => ({
+    ...a,
+    dueLabel: new Date(a.due).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+  }));
+
+export const studentRecentGrades = [
+  { course: "Intro to AI", item: "Mid-term Exam", grade: "A", score: 92 },
+  { course: "Data Structures", item: "Problem Set 6", grade: "B+", score: 87 },
+  { course: "Linear Algebra", item: "Quiz 3", grade: "A-", score: 90 },
+  { course: "Marketing 101", item: "Case Study", grade: "B", score: 84 },
+  { course: "World Literature", item: "Essay", grade: "A", score: 94 },
+];
+
+export const studentAnnouncements = [
+  { id: 1, title: "Assignment due: Data Structures Problem Set 7", time: "Today", type: "assignment" },
+  { id: 2, title: "Live class starts in 30 min — Intro to AI", time: "30m", type: "class" },
+  { id: 3, title: "Mid-term results published for Linear Algebra", time: "1d ago", type: "result" },
+  { id: 4, title: "Library book return reminder", time: "2d ago", type: "library" },
+];

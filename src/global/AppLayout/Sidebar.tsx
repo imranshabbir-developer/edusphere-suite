@@ -17,8 +17,9 @@ export function Sidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
 
   const body = (
-    <div className={`flex flex-col h-full bg-sidebar text-sidebar-foreground ${collapsed ? "w-20" : "w-72"} transition-all duration-300`}>
-      <div className="flex items-center gap-3 px-5 h-16 border-b border-sidebar-border">
+    <div className={`relative flex flex-col h-full sidebar-gradient text-sidebar-foreground overflow-hidden ${collapsed ? "w-20" : "w-72"} transition-all duration-300`}>
+      <div className="relative z-10 flex flex-col flex-1 min-h-0">
+      <div className="flex items-center gap-3 px-5 h-16 border-b border-sidebar-border/80 shrink-0">
         <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
           <AcademicCapIcon className="w-5 h-5 text-primary-foreground" />
         </div>
@@ -80,6 +81,7 @@ export function Sidebar() {
           );
         })}
       </nav>
+      </div>
     </div>
   );
 

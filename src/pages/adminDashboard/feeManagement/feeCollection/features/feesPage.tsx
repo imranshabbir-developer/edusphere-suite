@@ -1,9 +1,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useNavigate } from "@tanstack/react-router";
 import { DataTable } from "@/components/ui/DataTable";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { StatsCard } from "@/components/ui/StatsCard";
-import { RecordFormModal, RecordDetailModal, ConfirmDialog, type FieldDef } from "@/components/ui/RecordDialogs";
+import { RecordFormModal, type FieldDef } from "@/components/ui/RecordDialogs";
+import { ConfirmDeleteModal } from "@/components/records/ConfirmDeleteModal";
+import { ActionFeedbackModal, type FeedbackAction } from "@/components/records/ActionFeedbackModal";
+import { usePersistedRecords } from "@/hooks/usePersistedRecords";
+import { useAppSelector } from "@/store/store";
 import { fees as seed, revenueData, type FeeRecord } from "@/mockData";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { PlusIcon } from "@heroicons/react/24/outline";
@@ -15,11 +20,22 @@ const PROGRAMS = ["MBA", "B.Tech CSE", "B.Sc Physics", "M.Tech AI", "BBA", "MA E
 const STATUSES: FeeRecord["status"][] = ["Paid", "Partial", "Overdue"];
 
 export default function FeesPage() {
-  const [data, setData] = useState<FeeRecord[]>(seed);
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
+  const navigate = useNavigate();
+  const storageKey = `${role}/fees/collection`;
+  const [data, setData] = usePersistedRecords<FeeRecord>(storageKey, seed);
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<FeeRecord | null>(null);
-  const [viewing, setViewing] = useState<FeeRecord | null>(null);
   const [deleting, setDeleting] = useState<FeeRecord | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackAction | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const goDetail = (id: string, edit = false) => {
+    navigate({
+      to: "/$role/fees/collection/$id",
+      params: { role, id },
+      search: edit ? { edit: "1" } : {},
+    });
+  };
 
   const fields: FieldDef[] = [
     { key: "student", label: "Student name", required: true, span: 2 },
@@ -35,20 +51,19 @@ export default function FeesPage() {
     const amount = Number(v.amount ?? 0);
     const paid = Number(v.paid ?? 0);
     const status: FeeRecord["status"] = paid >= amount && amount > 0 ? "Paid" : paid > 0 ? "Partial" : "Overdue";
-    if (editing) setData((d) => d.map((f) => f.id === editing.id ? { ...f, ...v, amount, paid, due: amount - paid, status: (v.status as FeeRecord["status"]) ?? status } as FeeRecord : f));
-    else {
-      const inv = String(v.invoice || `INV-${Date.now().toString().slice(-5)}`);
-      setData((d) => [{
-        id: inv,
-        student: String(v.student ?? "New Student"),
-        program: String(v.program ?? PROGRAMS[0]),
-        amount, paid, due: amount - paid,
-        status: (v.status as FeeRecord["status"]) ?? status,
-        dueDate: v.dueDate ? new Date(String(v.dueDate)).toISOString() : new Date().toISOString(),
-        invoice: inv,
-      }, ...d]);
-    }
-    setEditing(null);
+    const inv = String(v.invoice || `INV-${Date.now().toString().slice(-5)}`);
+    setData((d) => [{
+      id: inv,
+      student: String(v.student ?? "New Student"),
+      program: String(v.program ?? PROGRAMS[0]),
+      amount, paid, due: amount - paid,
+      status: (v.status as FeeRecord["status"]) ?? status,
+      dueDate: v.dueDate ? new Date(String(v.dueDate)).toISOString() : new Date().toISOString(),
+      invoice: inv,
+    }, ...d]);
+    setFormOpen(false);
+    setFeedback("created");
+    setFeedbackOpen(true);
   };
 
   const columns: ColumnDef<FeeRecord>[] = [
@@ -73,7 +88,7 @@ export default function FeesPage() {
           <h1 className="text-2xl font-bold tracking-tight">Fee Collection</h1>
           <p className="text-muted-foreground text-sm">Track collections, invoices and outstanding dues.</p>
         </div>
-        <button onClick={() => { setEditing(null); setFormOpen(true); }}
+        <button onClick={() => setFormOpen(true)}
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
           <PlusIcon className="w-4 h-4" /> New Invoice
         </button>
@@ -103,19 +118,22 @@ export default function FeesPage() {
           { id: "program", label: "Program", options: PROGRAMS },
           { id: "status", label: "Status", options: STATUSES as unknown as string[] },
         ]}
-        onRowClick={(f) => setViewing(f)}
-        onView={(f) => setViewing(f)}
-        onEdit={(f) => { setEditing(f); setFormOpen(true); }}
+        onRowClick={(f) => goDetail(f.id)}
+        onView={(f) => goDetail(f.id)}
+        onEdit={(f) => goDetail(f.id, true)}
         onDelete={(f) => setDeleting(f)}
       />
 
-      <RecordFormModal open={formOpen} onClose={() => { setFormOpen(false); setEditing(null); }}
-        title={editing ? "Edit invoice" : "Create new invoice"} fields={fields} initial={editing ?? undefined}
-        onSubmit={submit} submitLabel={editing ? "Save changes" : "Create invoice"} />
-      <RecordDetailModal open={!!viewing} onClose={() => setViewing(null)} title={viewing?.invoice ?? "Invoice"} record={viewing as unknown as Record<string, unknown>} />
-      <ConfirmDialog open={!!deleting} onClose={() => setDeleting(null)}
-        onConfirm={() => deleting && setData((d) => d.filter((x) => x.id !== deleting.id))}
-        message={`Delete "${deleting?.invoice}"?`} />
+      <RecordFormModal open={formOpen} onClose={() => setFormOpen(false)}
+        title="Create new invoice" fields={fields} onSubmit={submit} submitLabel="Create invoice" />
+      <ConfirmDeleteModal open={!!deleting} onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) setData((d) => d.filter((x) => x.id !== deleting.id));
+          setFeedback("deleted");
+          setFeedbackOpen(true);
+        }}
+        recordName={deleting?.invoice} />
+      <ActionFeedbackModal action={feedback} open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
 import { Provider } from "react-redux";
 import { useEffect, type ReactNode } from "react";
-import { store, useAppSelector } from "@/redux/store";
+import { store, useAppSelector } from "@/store/store";
 
 import appCss from "../styles.css?url";
 
@@ -17,8 +17,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "EduOne ERP — University & Education Management" },
       { property: "og:description", content: "All-in-one ERP + LMS + CRM + SIS for schools, colleges and universities." },
       { name: "twitter:description", content: "All-in-one ERP + LMS + CRM + SIS for schools, colleges and universities." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7fbd2cdc-d224-44b8-a2aa-5332f31832f9/id-preview-06bcb1a0--07143a63-46c2-4315-8680-bc767bf5c930.lovable.app-1781027130784.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7fbd2cdc-d224-44b8-a2aa-5332f31832f9/id-preview-06bcb1a0--07143a63-46c2-4315-8680-bc767bf5c930.lovable.app-1781027130784.png" },
+      { property: "og:image", content: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&h=630&q=80" },
+      { name: "twitter:image", content: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&h=630&q=80" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
     ],

@@ -40,11 +40,11 @@ function seedRows(seed: string): Row[] {
 }
 
 export default function GenericModule() {
-  const params = useParams({ from: "/app/$" });
+  const params = useParams({ from: "/$role/$" });
   const splat = (params as { _splat?: string })._splat ?? "";
+  const urlRole = (params as { role?: string }).role ?? "admin";
   const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
-
-  const path = `/app/${splat}`;
+  const path = `/${urlRole}/${splat}`;
   const { groupLabel, label } = useMemo(() => {
     for (const g of SIDEBAR[role]) {
       const found = g.items.find((i) => i.to === path);

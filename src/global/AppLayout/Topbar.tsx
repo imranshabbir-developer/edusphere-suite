@@ -5,9 +5,11 @@ import { logout } from "@/store/slices/authSlice";
 import { toggle as toggleTheme } from "@/store/slices/themeSlice";
 import { setMobileNav, toggleSidebar } from "@/store/slices/uiSlice";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { roleProfilePath } from "@/utils/roleRoutes";
 
 function deriveCrumbs(path: string) {
-  const parts = path.split("/").filter((p) => p && p !== "app");
+  const roles = new Set(["admin", "teacher", "faculty", "student", "app"]);
+  const parts = path.split("/").filter((p) => p && !roles.has(p));
   return parts.map((p) => p.replace(/-/g, " "));
 }
 
@@ -64,7 +66,7 @@ export function Topbar() {
         <MenuItems anchor="bottom end" className="z-50 mt-2 w-56 glass-card rounded-xl shadow-elegant p-1 focus:outline-none">
           <MenuItem>
             {({ focus }) => (
-              <button onClick={() => navigate({ to: "/app/profile" })} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${focus ? "bg-muted" : ""}`}>
+              <button onClick={() => user && navigate({ to: roleProfilePath(user.role) })} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${focus ? "bg-muted" : ""}`}>
                 <UserIcon className="w-4 h-4" /> Profile
               </button>
             )}

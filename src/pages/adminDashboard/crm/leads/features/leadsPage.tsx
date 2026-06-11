@@ -6,6 +6,7 @@ import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Modal } from "@/components/ui/Modal";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { rolePath } from "@/utils/roleRoutes";
 import { addLead, removeLead, type Lead } from "@/store/slices/leadsSlice";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +27,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function LeadsPage() {
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
   const leads = useAppSelector((s) => s.leads.items);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
@@ -98,7 +100,7 @@ export default function LeadsPage() {
           <p className="text-muted-foreground text-sm">Track every prospect from inquiry to enrolment.</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/app/crm/pipeline" className="px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted">Pipeline view</Link>
+          <Link to={rolePath(role, "crm", "pipeline")} className="px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted">Pipeline view</Link>
           <button onClick={() => setOpen(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
             <PlusIcon className="w-4 h-4" /> New Lead
           </button>

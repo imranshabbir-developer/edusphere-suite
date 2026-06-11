@@ -6,7 +6,8 @@ import { z } from "zod";
 import { motion } from "framer-motion";
 import { EyeIcon, EyeSlashIcon, AcademicCapIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { login, VALID_EMAILS } from "@/store/slices/authSlice";
+import { login, VALID_EMAILS, roleForEmail } from "@/store/slices/authSlice";
+import { roleDashboardPath } from "@/utils/roleRoutes";
 import { LoginAnimation } from "@/components/LoginAnimation";
 import { LoginFloatingIcons } from "@/components/LoginFloatingIcons";
 
@@ -49,7 +50,9 @@ function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
-  useEffect(() => { if (user) navigate({ to: "/app/dashboard" }); }, [user, navigate]);
+  useEffect(() => {
+    if (user) navigate({ to: roleDashboardPath(user.role) });
+  }, [user, navigate]);
 
   const onSubmit = (data: FormData) => {
     const email = data.email.toLowerCase().trim();
@@ -59,7 +62,8 @@ function LoginPage() {
     }
     setError("");
     dispatch(login(email));
-    navigate({ to: "/app/dashboard" });
+    const role = roleForEmail(email);
+    if (role) navigate({ to: roleDashboardPath(role) });
   };
 
   const onDemoRoleChange = (email: string) => {
@@ -68,20 +72,21 @@ function LoginPage() {
   };
 
   return (
-    <div
-      className="relative min-h-screen min-h-[100dvh] flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 lg:px-8 overflow-hidden"
-      style={{
-        background:
-          "radial-gradient(circle at 20% 30%, oklch(0.78 0.14 250 / 0.55), transparent 55%), radial-gradient(circle at 80% 70%, oklch(0.72 0.13 188 / 0.45), transparent 50%), linear-gradient(135deg, oklch(0.585 0.214 263), oklch(0.45 0.18 270))",
-      }}
-    >
+    <div className="relative min-h-screen min-h-[100dvh] flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 lg:px-8 overflow-hidden bg-background">
+      {/* Dashboard-style soft gradient wash (primary + accent orbs) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
+        <div className="absolute -top-24 -right-24 sm:-top-32 sm:-right-32 w-[22rem] h-[22rem] sm:w-[32rem] sm:h-[32rem] rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 sm:-bottom-32 sm:-left-32 w-[22rem] h-[22rem] sm:w-[32rem] sm:h-[32rem] rounded-full bg-accent/20 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(90%,56rem)] h-[min(70%,40rem)] rounded-full bg-card/50 blur-3xl" />
+      </div>
+
       <LoginFloatingIcons />
 
       <motion.div
         initial={{ opacity: 0, y: 18, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="relative z-10 w-full max-w-[440px] sm:max-w-xl md:max-w-4xl lg:max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-card rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-white/30"
+        className="relative z-10 w-full max-w-[440px] sm:max-w-xl md:max-w-4xl lg:max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-card rounded-2xl sm:rounded-3xl shadow-elegant overflow-hidden border border-border/50"
       >
         {/* Mobile / tablet illustration */}
         <div

@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useAppSelector } from "@/store/store";
+import { rolePath } from "@/utils/roleRoutes";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { courses } from "@/mockData";
 import { ClockIcon, UserGroupIcon, StarIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
@@ -10,6 +12,7 @@ import { useState } from "react";
 const DEPTS = ["All", "Computer Science", "Mathematics", "Physics", "Business", "Humanities", "Engineering"];
 
 export default function CourseLibrary() {
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
   const [filter, setFilter] = useState("All");
   const filtered = filter === "All" ? courses : courses.filter((c) => c.department === filter);
 
@@ -20,7 +23,7 @@ export default function CourseLibrary() {
           <h1 className="text-2xl font-bold tracking-tight">Course Library</h1>
           <p className="text-muted-foreground text-sm">{filtered.length} courses available across departments.</p>
         </div>
-        <Link to="/app/lms/live" className="px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">+ Create Course</Link>
+        <Link to={rolePath(role, "lms", "live")} className="px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">+ Create Course</Link>
       </div>
       <div className="flex gap-2 overflow-x-auto scrollbar-thin pb-1">
         {DEPTS.map((d) => (

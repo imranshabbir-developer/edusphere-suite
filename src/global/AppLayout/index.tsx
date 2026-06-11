@@ -4,6 +4,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { useAppSelector } from "@/store/store";
 import { SIDEBAR } from "./sidebarConfig";
+import { roleDashboardPath, roleProfilePath } from "@/utils/roleRoutes";
 import { HomeIcon, BookOpenIcon, CalendarIcon, ChatBubbleLeftRightIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link } from "@tanstack/react-router";
 
@@ -26,11 +27,11 @@ export function AppLayout({ children }: { children?: ReactNode }) {
 
   const mobileNav = SIDEBAR[user.role][0]?.items[0]
     ? [
-        { to: "/app/dashboard", icon: HomeIcon, label: "Home" },
-        { to: SIDEBAR[user.role][1]?.items[0]?.to ?? "/app/dashboard", icon: BookOpenIcon, label: "Modules" },
-        { to: "/app/calendar", icon: CalendarIcon, label: "Calendar" },
-        { to: "/app/messages", icon: ChatBubbleLeftRightIcon, label: "Inbox" },
-        { to: "/app/profile", icon: UserIcon, label: "Profile" },
+        { to: roleDashboardPath(user.role), icon: HomeIcon, label: "Home" },
+        { to: SIDEBAR[user.role][1]?.items[0]?.to ?? roleDashboardPath(user.role), icon: BookOpenIcon, label: "Modules" },
+        { to: `/${user.role}/calendar`, icon: CalendarIcon, label: "Calendar" },
+        { to: `/${user.role}/messages`, icon: ChatBubbleLeftRightIcon, label: "Inbox" },
+        { to: roleProfilePath(user.role), icon: UserIcon, label: "Profile" },
       ]
     : [];
 

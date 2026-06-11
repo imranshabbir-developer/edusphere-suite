@@ -58,4 +58,8 @@ const slice = createSlice({
 
 export const { login, logout } = slice.actions;
 export const VALID_EMAILS = Object.keys(ROLE_MAP);
+
+export function roleForEmail(email: string): Role | null {
+  return ROLE_MAP[email.trim().toLowerCase()]?.role ?? null;
+}
 export default slice.reducer;

@@ -10,24 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as RoleRouteImport } from './routes/$role'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppProfileRouteImport } from './routes/app.profile'
-import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppSplatRouteImport } from './routes/app.$'
-import { Route as AppStudentsListRouteImport } from './routes/app.students.list'
-import { Route as AppLmsLiveRouteImport } from './routes/app.lms.live'
-import { Route as AppLmsLibraryRouteImport } from './routes/app.lms.library'
-import { Route as AppFeesCollectionRouteImport } from './routes/app.fees.collection'
-import { Route as AppFacultyTeachersRouteImport } from './routes/app.faculty.teachers'
-import { Route as AppExamsScheduleRouteImport } from './routes/app.exams.schedule'
-import { Route as AppCrmPipelineRouteImport } from './routes/app.crm.pipeline'
-import { Route as AppCrmLeadsRouteImport } from './routes/app.crm.leads'
-import { Route as AppAttendanceStudentsRouteImport } from './routes/app.attendance.students'
-import { Route as AppAdmissionsApplicationsRouteImport } from './routes/app.admissions.applications'
+import { Route as RoleProfileRouteImport } from './routes/$role.profile'
+import { Route as RoleDashboardRouteImport } from './routes/$role.dashboard'
+import { Route as RoleSplatRouteImport } from './routes/$role.$'
+import { Route as RoleStudentsListRouteImport } from './routes/$role.students.list'
+import { Route as RoleLmsLiveRouteImport } from './routes/$role.lms.live'
+import { Route as RoleLmsLibraryRouteImport } from './routes/$role.lms.library'
+import { Route as RoleFeesCollectionRouteImport } from './routes/$role.fees.collection'
+import { Route as RoleFacultyTeachersRouteImport } from './routes/$role.faculty.teachers'
+import { Route as RoleExamsScheduleRouteImport } from './routes/$role.exams.schedule'
+import { Route as RoleCrmPipelineRouteImport } from './routes/$role.crm.pipeline'
+import { Route as RoleCrmLeadsRouteImport } from './routes/$role.crm.leads'
+import { Route as RoleAttendanceStudentsRouteImport } from './routes/$role.attendance.students'
+import { Route as RoleAdmissionsApplicationsRouteImport } from './routes/$role.admissions.applications'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleRoute = RoleRouteImport.update({
+  id: '/$role',
+  path: '/$role',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -35,181 +42,199 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSplatRoute = AppSplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => AppRoute,
 } as any)
-const AppStudentsListRoute = AppStudentsListRouteImport.update({
+const RoleProfileRoute = RoleProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => RoleRoute,
+} as any)
+const RoleDashboardRoute = RoleDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => RoleRoute,
+} as any)
+const RoleSplatRoute = RoleSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => RoleRoute,
+} as any)
+const RoleStudentsListRoute = RoleStudentsListRouteImport.update({
   id: '/students/list',
   path: '/students/list',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppLmsLiveRoute = AppLmsLiveRouteImport.update({
+const RoleLmsLiveRoute = RoleLmsLiveRouteImport.update({
   id: '/lms/live',
   path: '/lms/live',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppLmsLibraryRoute = AppLmsLibraryRouteImport.update({
+const RoleLmsLibraryRoute = RoleLmsLibraryRouteImport.update({
   id: '/lms/library',
   path: '/lms/library',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppFeesCollectionRoute = AppFeesCollectionRouteImport.update({
+const RoleFeesCollectionRoute = RoleFeesCollectionRouteImport.update({
   id: '/fees/collection',
   path: '/fees/collection',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppFacultyTeachersRoute = AppFacultyTeachersRouteImport.update({
+const RoleFacultyTeachersRoute = RoleFacultyTeachersRouteImport.update({
   id: '/faculty/teachers',
   path: '/faculty/teachers',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppExamsScheduleRoute = AppExamsScheduleRouteImport.update({
+const RoleExamsScheduleRoute = RoleExamsScheduleRouteImport.update({
   id: '/exams/schedule',
   path: '/exams/schedule',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppCrmPipelineRoute = AppCrmPipelineRouteImport.update({
+const RoleCrmPipelineRoute = RoleCrmPipelineRouteImport.update({
   id: '/crm/pipeline',
   path: '/crm/pipeline',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppCrmLeadsRoute = AppCrmLeadsRouteImport.update({
+const RoleCrmLeadsRoute = RoleCrmLeadsRouteImport.update({
   id: '/crm/leads',
   path: '/crm/leads',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppAttendanceStudentsRoute = AppAttendanceStudentsRouteImport.update({
+const RoleAttendanceStudentsRoute = RoleAttendanceStudentsRouteImport.update({
   id: '/attendance/students',
   path: '/attendance/students',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => RoleRoute,
 } as any)
-const AppAdmissionsApplicationsRoute =
-  AppAdmissionsApplicationsRouteImport.update({
+const RoleAdmissionsApplicationsRoute =
+  RoleAdmissionsApplicationsRouteImport.update({
     id: '/admissions/applications',
     path: '/admissions/applications',
-    getParentRoute: () => AppRoute,
+    getParentRoute: () => RoleRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/$role/$': typeof RoleSplatRoute
+  '/$role/dashboard': typeof RoleDashboardRoute
+  '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/profile': typeof AppProfileRoute
-  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
-  '/app/attendance/students': typeof AppAttendanceStudentsRoute
-  '/app/crm/leads': typeof AppCrmLeadsRoute
-  '/app/crm/pipeline': typeof AppCrmPipelineRoute
-  '/app/exams/schedule': typeof AppExamsScheduleRoute
-  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
-  '/app/fees/collection': typeof AppFeesCollectionRoute
-  '/app/lms/library': typeof AppLmsLibraryRoute
-  '/app/lms/live': typeof AppLmsLiveRoute
-  '/app/students/list': typeof AppStudentsListRoute
+  '/$role/admissions/applications': typeof RoleAdmissionsApplicationsRoute
+  '/$role/attendance/students': typeof RoleAttendanceStudentsRoute
+  '/$role/crm/leads': typeof RoleCrmLeadsRoute
+  '/$role/crm/pipeline': typeof RoleCrmPipelineRoute
+  '/$role/exams/schedule': typeof RoleExamsScheduleRoute
+  '/$role/faculty/teachers': typeof RoleFacultyTeachersRoute
+  '/$role/fees/collection': typeof RoleFeesCollectionRoute
+  '/$role/lms/library': typeof RoleLmsLibraryRoute
+  '/$role/lms/live': typeof RoleLmsLiveRoute
+  '/$role/students/list': typeof RoleStudentsListRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/$role/$': typeof RoleSplatRoute
+  '/$role/dashboard': typeof RoleDashboardRoute
+  '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/profile': typeof AppProfileRoute
-  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
-  '/app/attendance/students': typeof AppAttendanceStudentsRoute
-  '/app/crm/leads': typeof AppCrmLeadsRoute
-  '/app/crm/pipeline': typeof AppCrmPipelineRoute
-  '/app/exams/schedule': typeof AppExamsScheduleRoute
-  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
-  '/app/fees/collection': typeof AppFeesCollectionRoute
-  '/app/lms/library': typeof AppLmsLibraryRoute
-  '/app/lms/live': typeof AppLmsLiveRoute
-  '/app/students/list': typeof AppStudentsListRoute
+  '/$role/admissions/applications': typeof RoleAdmissionsApplicationsRoute
+  '/$role/attendance/students': typeof RoleAttendanceStudentsRoute
+  '/$role/crm/leads': typeof RoleCrmLeadsRoute
+  '/$role/crm/pipeline': typeof RoleCrmPipelineRoute
+  '/$role/exams/schedule': typeof RoleExamsScheduleRoute
+  '/$role/faculty/teachers': typeof RoleFacultyTeachersRoute
+  '/$role/fees/collection': typeof RoleFeesCollectionRoute
+  '/$role/lms/library': typeof RoleLmsLibraryRoute
+  '/$role/lms/live': typeof RoleLmsLiveRoute
+  '/$role/students/list': typeof RoleStudentsListRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/$role/$': typeof RoleSplatRoute
+  '/$role/dashboard': typeof RoleDashboardRoute
+  '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
-  '/app/dashboard': typeof AppDashboardRoute
-  '/app/profile': typeof AppProfileRoute
-  '/app/admissions/applications': typeof AppAdmissionsApplicationsRoute
-  '/app/attendance/students': typeof AppAttendanceStudentsRoute
-  '/app/crm/leads': typeof AppCrmLeadsRoute
-  '/app/crm/pipeline': typeof AppCrmPipelineRoute
-  '/app/exams/schedule': typeof AppExamsScheduleRoute
-  '/app/faculty/teachers': typeof AppFacultyTeachersRoute
-  '/app/fees/collection': typeof AppFeesCollectionRoute
-  '/app/lms/library': typeof AppLmsLibraryRoute
-  '/app/lms/live': typeof AppLmsLiveRoute
-  '/app/students/list': typeof AppStudentsListRoute
+  '/$role/admissions/applications': typeof RoleAdmissionsApplicationsRoute
+  '/$role/attendance/students': typeof RoleAttendanceStudentsRoute
+  '/$role/crm/leads': typeof RoleCrmLeadsRoute
+  '/$role/crm/pipeline': typeof RoleCrmPipelineRoute
+  '/$role/exams/schedule': typeof RoleExamsScheduleRoute
+  '/$role/faculty/teachers': typeof RoleFacultyTeachersRoute
+  '/$role/fees/collection': typeof RoleFeesCollectionRoute
+  '/$role/lms/library': typeof RoleLmsLibraryRoute
+  '/$role/lms/live': typeof RoleLmsLiveRoute
+  '/$role/students/list': typeof RoleStudentsListRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$role'
     | '/app'
+    | '/$role/$'
+    | '/$role/dashboard'
+    | '/$role/profile'
     | '/app/$'
-    | '/app/dashboard'
-    | '/app/profile'
-    | '/app/admissions/applications'
-    | '/app/attendance/students'
-    | '/app/crm/leads'
-    | '/app/crm/pipeline'
-    | '/app/exams/schedule'
-    | '/app/faculty/teachers'
-    | '/app/fees/collection'
-    | '/app/lms/library'
-    | '/app/lms/live'
-    | '/app/students/list'
+    | '/$role/admissions/applications'
+    | '/$role/attendance/students'
+    | '/$role/crm/leads'
+    | '/$role/crm/pipeline'
+    | '/$role/exams/schedule'
+    | '/$role/faculty/teachers'
+    | '/$role/fees/collection'
+    | '/$role/lms/library'
+    | '/$role/lms/live'
+    | '/$role/students/list'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$role'
     | '/app'
+    | '/$role/$'
+    | '/$role/dashboard'
+    | '/$role/profile'
     | '/app/$'
-    | '/app/dashboard'
-    | '/app/profile'
-    | '/app/admissions/applications'
-    | '/app/attendance/students'
-    | '/app/crm/leads'
-    | '/app/crm/pipeline'
-    | '/app/exams/schedule'
-    | '/app/faculty/teachers'
-    | '/app/fees/collection'
-    | '/app/lms/library'
-    | '/app/lms/live'
-    | '/app/students/list'
+    | '/$role/admissions/applications'
+    | '/$role/attendance/students'
+    | '/$role/crm/leads'
+    | '/$role/crm/pipeline'
+    | '/$role/exams/schedule'
+    | '/$role/faculty/teachers'
+    | '/$role/fees/collection'
+    | '/$role/lms/library'
+    | '/$role/lms/live'
+    | '/$role/students/list'
   id:
     | '__root__'
     | '/'
+    | '/$role'
     | '/app'
+    | '/$role/$'
+    | '/$role/dashboard'
+    | '/$role/profile'
     | '/app/$'
-    | '/app/dashboard'
-    | '/app/profile'
-    | '/app/admissions/applications'
-    | '/app/attendance/students'
-    | '/app/crm/leads'
-    | '/app/crm/pipeline'
-    | '/app/exams/schedule'
-    | '/app/faculty/teachers'
-    | '/app/fees/collection'
-    | '/app/lms/library'
-    | '/app/lms/live'
-    | '/app/students/list'
+    | '/$role/admissions/applications'
+    | '/$role/attendance/students'
+    | '/$role/crm/leads'
+    | '/$role/crm/pipeline'
+    | '/$role/exams/schedule'
+    | '/$role/faculty/teachers'
+    | '/$role/fees/collection'
+    | '/$role/lms/library'
+    | '/$role/lms/live'
+    | '/$role/students/list'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RoleRoute: typeof RoleRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
 }
 
@@ -222,26 +247,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$role': {
+      id: '/$role'
+      path: '/$role'
+      fullPath: '/$role'
+      preLoaderRoute: typeof RoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/app/profile': {
-      id: '/app/profile'
-      path: '/profile'
-      fullPath: '/app/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/dashboard': {
-      id: '/app/dashboard'
-      path: '/dashboard'
-      fullPath: '/app/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
     }
     '/app/$': {
       id: '/app/$'
@@ -250,115 +268,147 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSplatRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/students/list': {
-      id: '/app/students/list'
+    '/$role/profile': {
+      id: '/$role/profile'
+      path: '/profile'
+      fullPath: '/$role/profile'
+      preLoaderRoute: typeof RoleProfileRouteImport
+      parentRoute: typeof RoleRoute
+    }
+    '/$role/dashboard': {
+      id: '/$role/dashboard'
+      path: '/dashboard'
+      fullPath: '/$role/dashboard'
+      preLoaderRoute: typeof RoleDashboardRouteImport
+      parentRoute: typeof RoleRoute
+    }
+    '/$role/$': {
+      id: '/$role/$'
+      path: '/$'
+      fullPath: '/$role/$'
+      preLoaderRoute: typeof RoleSplatRouteImport
+      parentRoute: typeof RoleRoute
+    }
+    '/$role/students/list': {
+      id: '/$role/students/list'
       path: '/students/list'
-      fullPath: '/app/students/list'
-      preLoaderRoute: typeof AppStudentsListRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/students/list'
+      preLoaderRoute: typeof RoleStudentsListRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/lms/live': {
-      id: '/app/lms/live'
+    '/$role/lms/live': {
+      id: '/$role/lms/live'
       path: '/lms/live'
-      fullPath: '/app/lms/live'
-      preLoaderRoute: typeof AppLmsLiveRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/lms/live'
+      preLoaderRoute: typeof RoleLmsLiveRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/lms/library': {
-      id: '/app/lms/library'
+    '/$role/lms/library': {
+      id: '/$role/lms/library'
       path: '/lms/library'
-      fullPath: '/app/lms/library'
-      preLoaderRoute: typeof AppLmsLibraryRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/lms/library'
+      preLoaderRoute: typeof RoleLmsLibraryRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/fees/collection': {
-      id: '/app/fees/collection'
+    '/$role/fees/collection': {
+      id: '/$role/fees/collection'
       path: '/fees/collection'
-      fullPath: '/app/fees/collection'
-      preLoaderRoute: typeof AppFeesCollectionRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/fees/collection'
+      preLoaderRoute: typeof RoleFeesCollectionRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/faculty/teachers': {
-      id: '/app/faculty/teachers'
+    '/$role/faculty/teachers': {
+      id: '/$role/faculty/teachers'
       path: '/faculty/teachers'
-      fullPath: '/app/faculty/teachers'
-      preLoaderRoute: typeof AppFacultyTeachersRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/faculty/teachers'
+      preLoaderRoute: typeof RoleFacultyTeachersRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/exams/schedule': {
-      id: '/app/exams/schedule'
+    '/$role/exams/schedule': {
+      id: '/$role/exams/schedule'
       path: '/exams/schedule'
-      fullPath: '/app/exams/schedule'
-      preLoaderRoute: typeof AppExamsScheduleRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/exams/schedule'
+      preLoaderRoute: typeof RoleExamsScheduleRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/crm/pipeline': {
-      id: '/app/crm/pipeline'
+    '/$role/crm/pipeline': {
+      id: '/$role/crm/pipeline'
       path: '/crm/pipeline'
-      fullPath: '/app/crm/pipeline'
-      preLoaderRoute: typeof AppCrmPipelineRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/crm/pipeline'
+      preLoaderRoute: typeof RoleCrmPipelineRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/crm/leads': {
-      id: '/app/crm/leads'
+    '/$role/crm/leads': {
+      id: '/$role/crm/leads'
       path: '/crm/leads'
-      fullPath: '/app/crm/leads'
-      preLoaderRoute: typeof AppCrmLeadsRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/crm/leads'
+      preLoaderRoute: typeof RoleCrmLeadsRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/attendance/students': {
-      id: '/app/attendance/students'
+    '/$role/attendance/students': {
+      id: '/$role/attendance/students'
       path: '/attendance/students'
-      fullPath: '/app/attendance/students'
-      preLoaderRoute: typeof AppAttendanceStudentsRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/attendance/students'
+      preLoaderRoute: typeof RoleAttendanceStudentsRouteImport
+      parentRoute: typeof RoleRoute
     }
-    '/app/admissions/applications': {
-      id: '/app/admissions/applications'
+    '/$role/admissions/applications': {
+      id: '/$role/admissions/applications'
       path: '/admissions/applications'
-      fullPath: '/app/admissions/applications'
-      preLoaderRoute: typeof AppAdmissionsApplicationsRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/$role/admissions/applications'
+      preLoaderRoute: typeof RoleAdmissionsApplicationsRouteImport
+      parentRoute: typeof RoleRoute
     }
   }
 }
 
+interface RoleRouteChildren {
+  RoleSplatRoute: typeof RoleSplatRoute
+  RoleDashboardRoute: typeof RoleDashboardRoute
+  RoleProfileRoute: typeof RoleProfileRoute
+  RoleAdmissionsApplicationsRoute: typeof RoleAdmissionsApplicationsRoute
+  RoleAttendanceStudentsRoute: typeof RoleAttendanceStudentsRoute
+  RoleCrmLeadsRoute: typeof RoleCrmLeadsRoute
+  RoleCrmPipelineRoute: typeof RoleCrmPipelineRoute
+  RoleExamsScheduleRoute: typeof RoleExamsScheduleRoute
+  RoleFacultyTeachersRoute: typeof RoleFacultyTeachersRoute
+  RoleFeesCollectionRoute: typeof RoleFeesCollectionRoute
+  RoleLmsLibraryRoute: typeof RoleLmsLibraryRoute
+  RoleLmsLiveRoute: typeof RoleLmsLiveRoute
+  RoleStudentsListRoute: typeof RoleStudentsListRoute
+}
+
+const RoleRouteChildren: RoleRouteChildren = {
+  RoleSplatRoute: RoleSplatRoute,
+  RoleDashboardRoute: RoleDashboardRoute,
+  RoleProfileRoute: RoleProfileRoute,
+  RoleAdmissionsApplicationsRoute: RoleAdmissionsApplicationsRoute,
+  RoleAttendanceStudentsRoute: RoleAttendanceStudentsRoute,
+  RoleCrmLeadsRoute: RoleCrmLeadsRoute,
+  RoleCrmPipelineRoute: RoleCrmPipelineRoute,
+  RoleExamsScheduleRoute: RoleExamsScheduleRoute,
+  RoleFacultyTeachersRoute: RoleFacultyTeachersRoute,
+  RoleFeesCollectionRoute: RoleFeesCollectionRoute,
+  RoleLmsLibraryRoute: RoleLmsLibraryRoute,
+  RoleLmsLiveRoute: RoleLmsLiveRoute,
+  RoleStudentsListRoute: RoleStudentsListRoute,
+}
+
+const RoleRouteWithChildren = RoleRoute._addFileChildren(RoleRouteChildren)
+
 interface AppRouteChildren {
   AppSplatRoute: typeof AppSplatRoute
-  AppDashboardRoute: typeof AppDashboardRoute
-  AppProfileRoute: typeof AppProfileRoute
-  AppAdmissionsApplicationsRoute: typeof AppAdmissionsApplicationsRoute
-  AppAttendanceStudentsRoute: typeof AppAttendanceStudentsRoute
-  AppCrmLeadsRoute: typeof AppCrmLeadsRoute
-  AppCrmPipelineRoute: typeof AppCrmPipelineRoute
-  AppExamsScheduleRoute: typeof AppExamsScheduleRoute
-  AppFacultyTeachersRoute: typeof AppFacultyTeachersRoute
-  AppFeesCollectionRoute: typeof AppFeesCollectionRoute
-  AppLmsLibraryRoute: typeof AppLmsLibraryRoute
-  AppLmsLiveRoute: typeof AppLmsLiveRoute
-  AppStudentsListRoute: typeof AppStudentsListRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppSplatRoute: AppSplatRoute,
-  AppDashboardRoute: AppDashboardRoute,
-  AppProfileRoute: AppProfileRoute,
-  AppAdmissionsApplicationsRoute: AppAdmissionsApplicationsRoute,
-  AppAttendanceStudentsRoute: AppAttendanceStudentsRoute,
-  AppCrmLeadsRoute: AppCrmLeadsRoute,
-  AppCrmPipelineRoute: AppCrmPipelineRoute,
-  AppExamsScheduleRoute: AppExamsScheduleRoute,
-  AppFacultyTeachersRoute: AppFacultyTeachersRoute,
-  AppFeesCollectionRoute: AppFeesCollectionRoute,
-  AppLmsLibraryRoute: AppLmsLibraryRoute,
-  AppLmsLiveRoute: AppLmsLiveRoute,
-  AppStudentsListRoute: AppStudentsListRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RoleRoute: RoleRouteWithChildren,
   AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport

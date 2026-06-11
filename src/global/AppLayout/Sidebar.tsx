@@ -80,19 +80,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <div className="p-3 border-t border-sidebar-border">
-        <div className="glass-card rounded-xl p-3 text-xs text-sidebar-foreground/80">
-          {!collapsed ? (
-            <>
-              <p className="font-semibold text-sidebar-accent-foreground">Need help?</p>
-              <p className="opacity-70 mt-0.5">Check docs or contact your admin.</p>
-            </>
-          ) : (
-            <p className="text-center">?</p>
-          )}
-        </div>
-      </div>
     </div>
   );
 

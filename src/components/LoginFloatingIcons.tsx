@@ -43,7 +43,7 @@ function FloatingIcon({ def }: { def: IconDef }) {
 
   return (
     <motion.div
-      className={`absolute ${size} rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg flex items-center justify-center text-white/90 pointer-events-none`}
+      className={`absolute ${size} rounded-2xl glass-card shadow-elegant flex items-center justify-center text-primary/45 pointer-events-none`}
       style={{ top, left }}
       initial={{ opacity: 0, scale: 0.6 }}
       animate={{

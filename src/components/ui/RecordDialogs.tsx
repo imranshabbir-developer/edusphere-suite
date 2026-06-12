@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Modal } from "./Modal";
+import { modalFieldClass } from "./ModalGradientShell";
 import { Badge, statusTone } from "./StatusBadge";
 
 export interface FieldDef {
@@ -48,13 +49,13 @@ export function RecordFormModal({ open, onClose, title, fields, initial, onSubmi
   return (
     <Modal open={open} onClose={onClose} title={title} size="lg"
       footer={<>
-        <button onClick={onClose} className="px-3 py-2 rounded-lg border border-border text-sm">Cancel</button>
+        <button onClick={onClose} className="px-3 py-2 rounded-lg border border-border/70 bg-white/50 dark:bg-white/5 text-sm hover:bg-white/70 dark:hover:bg-white/10 transition">Cancel</button>
         <button form="record-form" type="submit" className="px-4 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">{submitLabel}</button>
       </>}>
       <form id="record-form" onSubmit={submit} className="grid grid-cols-2 gap-3">
         {fields.map((f) => {
           const v = (values[f.key] as string | number | undefined) ?? "";
-          const cls = "w-full px-3 py-2 rounded-lg border border-border bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm";
+          const cls = modalFieldClass;
           return (
             <div key={f.key} className={f.span === 2 ? "col-span-2" : "col-span-2 sm:col-span-1"}>
               <label className="text-xs font-medium">{f.label}{f.required && <span className="text-danger"> *</span>}</label>
@@ -98,7 +99,7 @@ export function RecordDetailModal({ open, onClose, title = "Record details", rec
         {entries.map(([k, v]) => {
           const isStatus = /^(status|stage)$/i.test(k);
           return (
-            <div key={k} className="p-3 rounded-lg bg-muted/40">
+            <div key={k} className="p-3 rounded-lg bg-white/40 dark:bg-white/5 border border-border/40">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{k.replace(/([A-Z])/g, " $1")}</p>
               <div className="mt-1 text-sm font-medium break-words">
                 {isStatus ? <Badge tone={statusTone(String(v))}>{String(v)}</Badge> : String(v ?? "—")}
@@ -123,7 +124,7 @@ export function ConfirmDialog({ open, onClose, onConfirm, title = "Delete record
   return (
     <Modal open={open} onClose={onClose} title={title}
       footer={<>
-        <button onClick={onClose} className="px-3 py-2 rounded-lg border border-border text-sm">Cancel</button>
+        <button onClick={onClose} className="px-3 py-2 rounded-lg border border-border/70 bg-white/50 dark:bg-white/5 text-sm hover:bg-white/70 dark:hover:bg-white/10 transition">Cancel</button>
         <button onClick={() => { onConfirm(); onClose(); }} className="px-4 py-2 rounded-lg bg-danger text-danger-foreground text-sm font-medium">Delete</button>
       </>}>
       <p className="text-sm text-muted-foreground">{message}</p>

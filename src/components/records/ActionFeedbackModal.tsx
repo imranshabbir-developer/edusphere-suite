@@ -1,0 +1,97 @@
+import { useEffect } from "react";
+import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
+import {
+  CheckCircleIcon,
+  TrashIcon,
+  SparklesIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+import { ModalGradientShell, modalBackdropClass } from "@/components/ui/ModalGradientShell";
+
+export type FeedbackAction = "saved" | "deleted" | "created";
+
+const CONFIG: Record<
+  FeedbackAction,
+  { title: string; message: string; icon: typeof CheckCircleIcon; tone: string }
+> = {
+  saved: {
+    title: "Record saved",
+    message: "Your changes have been saved successfully.",
+    icon: CheckCircleIcon,
+    tone: "from-primary/20 to-accent/10 text-primary",
+  },
+  deleted: {
+    title: "Record deleted",
+    message: "The record has been removed from the list.",
+    icon: TrashIcon,
+    tone: "from-danger/15 to-warning/10 text-danger",
+  },
+  created: {
+    title: "Record created",
+    message: "A new record has been added successfully.",
+    icon: SparklesIcon,
+    tone: "from-success/15 to-accent/10 text-success",
+  },
+};
+
+export function ActionFeedbackModal({
+  action,
+  open,
+  onClose,
+}: {
+  action: FeedbackAction | null;
+  open: boolean;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(onClose, 2800);
+    return () => clearTimeout(t);
+  }, [open, onClose]);
+
+  if (!action) return null;
+  const cfg = CONFIG[action];
+  const Icon = cfg.icon;
+
+  return (
+    <Dialog open={open} onClose={onClose} className="relative z-[70]">
+      <DialogBackdrop transition className={modalBackdropClass} />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel
+          transition
+          className="relative w-full max-w-[20rem] bg-transparent data-[closed]:scale-95 data-[closed]:opacity-0 transition duration-200"
+        >
+          <ModalGradientShell>
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative p-5 text-center"
+            >
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute right-2 top-2 p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/10"
+                aria-label="Close"
+              >
+                <XMarkIcon className="w-4 h-4" />
+              </button>
+              <div className={`mx-auto w-12 h-12 rounded-xl bg-gradient-to-br ${cfg.tone} flex items-center justify-center shadow-elegant mb-3`}>
+                <Icon className="w-6 h-6" />
+              </div>
+              <p className="text-base font-semibold">{cfg.title}</p>
+              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{cfg.message}</p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-4 w-full py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold shadow-elegant"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </ModalGradientShell>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  );
+}

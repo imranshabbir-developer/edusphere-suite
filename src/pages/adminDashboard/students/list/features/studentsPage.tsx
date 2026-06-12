@@ -1,14 +1,17 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useNavigate } from "@tanstack/react-router";
 import { DataTable } from "@/components/ui/DataTable";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { StatsCard } from "@/components/ui/StatsCard";
-import { RecordFormModal, RecordDetailModal, ConfirmDialog, type FieldDef } from "@/components/ui/RecordDialogs";
+import { RecordFormModal, type FieldDef } from "@/components/ui/RecordDialogs";
+import { ConfirmDeleteModal } from "@/components/records/ConfirmDeleteModal";
+import { ActionFeedbackModal, type FeedbackAction } from "@/components/records/ActionFeedbackModal";
+import { usePersistedRecords } from "@/hooks/usePersistedRecords";
+import { useAppSelector } from "@/store/store";
 import { students as seed, type Student } from "@/mockData";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-
-
 
 const PROGRAMS = ["MBA", "B.Tech CSE", "B.Sc Physics", "M.Tech AI", "BBA", "MA English"];
 const SECTIONS = ["A", "B", "C"];
@@ -17,11 +20,22 @@ const STATUSES: Student["status"][] = ["Active", "On Leave", "Graduated"];
 const av = (n: string) => `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(n || "New")}`;
 
 export default function StudentsPage() {
-  const [data, setData] = useState<Student[]>(seed);
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
+  const navigate = useNavigate();
+  const storageKey = `${role}/students/list`;
+  const [data, setData] = usePersistedRecords<Student>(storageKey, seed);
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Student | null>(null);
-  const [viewing, setViewing] = useState<Student | null>(null);
   const [deleting, setDeleting] = useState<Student | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackAction | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const goDetail = (id: string, edit = false) => {
+    navigate({
+      to: "/$role/students/list/$id",
+      params: { role, id },
+      search: edit ? { edit: "1" } : {},
+    });
+  };
 
   const fields: FieldDef[] = [
     { key: "name", label: "Full name", required: true, span: 2 },
@@ -38,24 +52,23 @@ export default function StudentsPage() {
   ];
 
   const submit = (v: Record<string, unknown>) => {
-    if (editing) setData((d) => d.map((s) => s.id === editing.id ? { ...s, ...v } as Student : s));
-    else {
-      const name = String(v.name ?? "New Student");
-      setData((d) => [{
-        id: `STU-${Date.now().toString().slice(-5)}`,
-        name, email: String(v.email ?? ""), phone: String(v.phone ?? ""),
-        rollNo: String(v.rollNo ?? `2024${Math.floor(Math.random() * 9999)}`),
-        program: String(v.program ?? PROGRAMS[0]),
-        batch: String(v.batch ?? "2024-2028"),
-        section: String(v.section ?? "A"),
-        cgpa: Number(v.cgpa ?? 3.5),
-        attendance: Number(v.attendance ?? 90),
-        guardian: String(v.guardian ?? ""),
-        status: (v.status as Student["status"]) ?? "Active",
-        avatar: av(name),
-      }, ...d]);
-    }
-    setEditing(null);
+    const name = String(v.name ?? "New Student");
+    setData((d) => [{
+      id: `STU-${Date.now().toString().slice(-5)}`,
+      name, email: String(v.email ?? ""), phone: String(v.phone ?? ""),
+      rollNo: String(v.rollNo ?? `2024${Math.floor(Math.random() * 9999)}`),
+      program: String(v.program ?? PROGRAMS[0]),
+      batch: String(v.batch ?? "2024-2028"),
+      section: String(v.section ?? "A"),
+      cgpa: Number(v.cgpa ?? 3.5),
+      attendance: Number(v.attendance ?? 90),
+      guardian: String(v.guardian ?? ""),
+      status: (v.status as Student["status"]) ?? "Active",
+      avatar: av(name),
+    }, ...d]);
+    setFormOpen(false);
+    setFeedback("created");
+    setFeedbackOpen(true);
   };
 
   const columns: ColumnDef<Student>[] = [
@@ -100,7 +113,7 @@ export default function StudentsPage() {
           <h1 className="text-2xl font-bold tracking-tight">Students</h1>
           <p className="text-muted-foreground text-sm">Complete student information system.</p>
         </div>
-        <button onClick={() => { setEditing(null); setFormOpen(true); }}
+        <button onClick={() => setFormOpen(true)}
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
           <PlusIcon className="w-4 h-4" /> New Student
         </button>
@@ -120,19 +133,22 @@ export default function StudentsPage() {
           { id: "section", label: "Section", options: SECTIONS },
           { id: "status", label: "Status", options: STATUSES as unknown as string[] },
         ]}
-        onRowClick={(s) => setViewing(s)}
-        onView={(s) => setViewing(s)}
-        onEdit={(s) => { setEditing(s); setFormOpen(true); }}
+        onRowClick={(s) => goDetail(s.id)}
+        onView={(s) => goDetail(s.id)}
+        onEdit={(s) => goDetail(s.id, true)}
         onDelete={(s) => setDeleting(s)}
       />
 
-      <RecordFormModal open={formOpen} onClose={() => { setFormOpen(false); setEditing(null); }}
-        title={editing ? "Edit student" : "Add new student"} fields={fields} initial={editing ?? undefined}
-        onSubmit={submit} submitLabel={editing ? "Save changes" : "Add student"} />
-      <RecordDetailModal open={!!viewing} onClose={() => setViewing(null)} title={viewing?.name ?? "Student"} record={viewing as unknown as Record<string, unknown>} exclude={["avatar"]} />
-      <ConfirmDialog open={!!deleting} onClose={() => setDeleting(null)}
-        onConfirm={() => deleting && setData((d) => d.filter((x) => x.id !== deleting.id))}
-        message={`Delete "${deleting?.name}"? This cannot be undone.`} />
+      <RecordFormModal open={formOpen} onClose={() => setFormOpen(false)}
+        title="Add new student" fields={fields} onSubmit={submit} submitLabel="Add student" />
+      <ConfirmDeleteModal open={!!deleting} onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) setData((d) => d.filter((x) => x.id !== deleting.id));
+          setFeedback("deleted");
+          setFeedbackOpen(true);
+        }}
+        recordName={deleting?.name} />
+      <ActionFeedbackModal action={feedback} open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

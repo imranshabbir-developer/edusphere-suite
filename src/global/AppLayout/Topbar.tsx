@@ -1,13 +1,15 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Bars3Icon, BellIcon, MagnifyingGlassIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, UserIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, MagnifyingGlassIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, UserIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { logout } from "@/store/slices/authSlice";
 import { toggle as toggleTheme } from "@/store/slices/themeSlice";
 import { setMobileNav, toggleSidebar } from "@/store/slices/uiSlice";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { useNavigate, useRouterState, Link } from "@tanstack/react-router";
+import { roleProfilePath, roleChatPath } from "@/utils/roleRoutes";
 
 function deriveCrumbs(path: string) {
-  const parts = path.split("/").filter((p) => p && p !== "app");
+  const roles = new Set(["admin", "teacher", "faculty", "student", "app"]);
+  const parts = path.split("/").filter((p) => p && !roles.has(p));
   return parts.map((p) => p.replace(/-/g, " "));
 }
 
@@ -48,6 +50,14 @@ export function Topbar() {
         {mode === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
       </button>
 
+      <Link
+        to={user ? roleChatPath(user.role) : "/"}
+        className={`relative p-2 rounded-lg hover:bg-muted ${path.includes("/chat") ? "text-primary bg-primary/10" : ""}`}
+        aria-label="Messages"
+      >
+        <ChatBubbleLeftRightIcon className="w-5 h-5" />
+      </Link>
+
       <button className="relative p-2 rounded-lg hover:bg-muted">
         <BellIcon className="w-5 h-5" />
         <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger" />
@@ -64,7 +74,7 @@ export function Topbar() {
         <MenuItems anchor="bottom end" className="z-50 mt-2 w-56 glass-card rounded-xl shadow-elegant p-1 focus:outline-none">
           <MenuItem>
             {({ focus }) => (
-              <button onClick={() => navigate({ to: "/app/profile" })} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${focus ? "bg-muted" : ""}`}>
+              <button onClick={() => user && navigate({ to: roleProfilePath(user.role) })} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${focus ? "bg-muted" : ""}`}>
                 <UserIcon className="w-4 h-4" /> Profile
               </button>
             )}

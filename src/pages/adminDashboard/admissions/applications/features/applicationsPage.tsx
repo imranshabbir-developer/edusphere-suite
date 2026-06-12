@@ -1,9 +1,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useNavigate } from "@tanstack/react-router";
 import { DataTable } from "@/components/ui/DataTable";
 import { Badge, statusTone } from "@/components/ui/StatusBadge";
 import { StatsCard } from "@/components/ui/StatsCard";
-import { RecordFormModal, RecordDetailModal, ConfirmDialog, type FieldDef } from "@/components/ui/RecordDialogs";
+import { RecordFormModal, type FieldDef } from "@/components/ui/RecordDialogs";
+import { ConfirmDeleteModal } from "@/components/records/ConfirmDeleteModal";
+import { ActionFeedbackModal, type FeedbackAction } from "@/components/records/ActionFeedbackModal";
+import { usePersistedRecords } from "@/hooks/usePersistedRecords";
+import { useAppSelector } from "@/store/store";
 import { admissions as seed, admissionFunnel, type Admission } from "@/mockData";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { PlusIcon } from "@heroicons/react/24/outline";
@@ -15,11 +20,22 @@ const PROGRAMS = ["MBA", "B.Tech CSE", "B.Sc Physics", "M.Tech AI", "BBA", "MA E
 const STATUSES: Admission["status"][] = ["Submitted", "Under Review", "Approved", "Rejected", "Waitlisted"];
 
 export default function AdmissionsPage() {
-  const [data, setData] = useState<Admission[]>(seed);
+  const role = useAppSelector((s) => s.auth.user?.role) ?? "admin";
+  const navigate = useNavigate();
+  const storageKey = `${role}/admissions/applications`;
+  const [data, setData] = usePersistedRecords<Admission>(storageKey, seed);
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<Admission | null>(null);
-  const [viewing, setViewing] = useState<Admission | null>(null);
   const [deleting, setDeleting] = useState<Admission | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackAction | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const goDetail = (id: string, edit = false) => {
+    navigate({
+      to: "/$role/admissions/applications/$id",
+      params: { role, id },
+      search: edit ? { edit: "1" } : {},
+    });
+  };
 
   const fields: FieldDef[] = [
     { key: "applicant", label: "Applicant name", required: true, span: 2 },
@@ -31,8 +47,7 @@ export default function AdmissionsPage() {
   ];
 
   const submit = (v: Record<string, unknown>) => {
-    if (editing) setData((d) => d.map((a) => a.id === editing.id ? { ...a, ...v } as Admission : a));
-    else setData((d) => [{
+    setData((d) => [{
       id: `ADM-${Date.now().toString().slice(-5)}`,
       applicant: String(v.applicant ?? "New Applicant"),
       email: String(v.email ?? ""),
@@ -42,7 +57,9 @@ export default function AdmissionsPage() {
       score: Number(v.score ?? 70),
       documents: Number(v.documents ?? 3),
     }, ...d]);
-    setEditing(null);
+    setFormOpen(false);
+    setFeedback("created");
+    setFeedbackOpen(true);
   };
 
   const columns: ColumnDef<Admission>[] = [
@@ -65,7 +82,7 @@ export default function AdmissionsPage() {
           <h1 className="text-2xl font-bold tracking-tight">Applications</h1>
           <p className="text-muted-foreground text-sm">Manage incoming admission applications.</p>
         </div>
-        <button onClick={() => { setEditing(null); setFormOpen(true); }}
+        <button onClick={() => setFormOpen(true)}
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-medium shadow-elegant">
           <PlusIcon className="w-4 h-4" /> New Application
         </button>
@@ -95,20 +112,22 @@ export default function AdmissionsPage() {
           { id: "program", label: "Program", options: PROGRAMS },
           { id: "status", label: "Status", options: STATUSES as unknown as string[] },
         ]}
-        onRowClick={(a) => setViewing(a)}
-        onView={(a) => setViewing(a)}
-        onEdit={(a) => { setEditing(a); setFormOpen(true); }}
+        onRowClick={(a) => goDetail(a.id)}
+        onView={(a) => goDetail(a.id)}
+        onEdit={(a) => goDetail(a.id, true)}
         onDelete={(a) => setDeleting(a)}
       />
 
-      <RecordFormModal open={formOpen} onClose={() => { setFormOpen(false); setEditing(null); }}
-        title={editing ? "Edit application" : "New application"} fields={fields} initial={editing ?? undefined}
-        onSubmit={submit} submitLabel={editing ? "Save changes" : "Create application"} />
-      <RecordDetailModal open={!!viewing} onClose={() => setViewing(null)}
-        title={viewing?.applicant ?? "Application"} record={viewing as unknown as Record<string, unknown>} />
-      <ConfirmDialog open={!!deleting} onClose={() => setDeleting(null)}
-        onConfirm={() => deleting && setData((d) => d.filter((x) => x.id !== deleting.id))}
-        message={`Delete application from "${deleting?.applicant}"?`} />
+      <RecordFormModal open={formOpen} onClose={() => setFormOpen(false)}
+        title="New application" fields={fields} onSubmit={submit} submitLabel="Create application" />
+      <ConfirmDeleteModal open={!!deleting} onClose={() => setDeleting(null)}
+        onConfirm={() => {
+          if (deleting) setData((d) => d.filter((x) => x.id !== deleting.id));
+          setFeedback("deleted");
+          setFeedbackOpen(true);
+        }}
+        recordName={deleting?.applicant} />
+      <ActionFeedbackModal action={feedback} open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }

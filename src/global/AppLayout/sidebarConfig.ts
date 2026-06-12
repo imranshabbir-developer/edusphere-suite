@@ -154,6 +154,7 @@ const adminGroups: NavGroup[] = [
   },
   {
     label: "Communication", icon: "ChatBubbleLeftRightIcon", items: [
+      { label: "Direct Chat", to: "/admin/chat" },
       { label: "Email Campaigns", to: "/admin/comm/email" },
       { label: "SMS", to: "/admin/comm/sms" },
       { label: "Notifications", to: "/admin/comm/notifications" },
@@ -221,9 +222,13 @@ const teacherGroups: NavGroup[] = [
       { label: "Grade Book", to: "/teacher/gradebook" },
     ],
   },
+  {
+    label: "Communication", icon: "ChatBubbleLeftRightIcon", items: [
+      { label: "Chat", to: "/teacher/chat" },
+    ],
+  },
   { label: "Other", icon: "EllipsisHorizontalCircleIcon", items: [
       { label: "Calendar", to: "/teacher/calendar" },
-      { label: "Messaging", to: "/teacher/messages" },
       { label: "Certificates", to: "/teacher/certificates" },
       { label: "Profile", to: "/teacher/profile" },
   ] },
@@ -242,9 +247,13 @@ const facultyGroups: NavGroup[] = [
     ],
   },
   {
+    label: "Communication", icon: "ChatBubbleLeftRightIcon", items: [
+      { label: "Chat", to: "/faculty/chat" },
+    ],
+  },
+  {
     label: "Other", icon: "Cog6ToothIcon", items: [
       { label: "Reports", to: "/faculty/reports" },
-      { label: "Communication", to: "/faculty/communication" },
       { label: "Tasks", to: "/faculty/tasks" },
       { label: "Profile", to: "/faculty/profile" },
     ],
@@ -267,10 +276,10 @@ const studentGroups: NavGroup[] = [
       { label: "Fee Details", to: "/student/fees" },
   ] },
   { label: "Community", icon: "ChatBubbleLeftRightIcon", items: [
+      { label: "Chat", to: "/student/chat" },
       { label: "Library", to: "/student/library" },
       { label: "Discussion Forum", to: "/student/forum" },
       { label: "Calendar", to: "/student/calendar" },
-      { label: "Messages", to: "/student/messages" },
       { label: "Profile", to: "/student/profile" },
   ] },
 ];

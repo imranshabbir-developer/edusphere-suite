@@ -47,7 +47,7 @@ export function Sidebar() {
             );
           }
           return (
-            <Disclosure key={g.label} defaultOpen={hasActive || g.label === "Overview"}>
+            <Disclosure key={g.label} defaultOpen={hasActive || g.label === "Overview" || g.label === "Communication"}>
               {({ open }) => (
                 <div>
                   <DisclosureButton className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-sidebar-accent transition group">

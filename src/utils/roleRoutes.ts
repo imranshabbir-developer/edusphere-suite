@@ -14,6 +14,10 @@ export function roleProfilePath(role: Role) {
   return `/${role}/profile`;
 }
 
+export function roleChatPath(role: Role) {
+  return `/${role}/chat`;
+}
+
 export function rolePath(role: Role, ...segments: string[]) {
   const tail = segments.filter(Boolean).join("/");
   return tail ? `/${role}/${tail}` : `/${role}`;

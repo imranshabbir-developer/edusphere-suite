@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSplatRouteImport } from './routes/app.$'
 import { Route as RoleProfileRouteImport } from './routes/$role.profile'
 import { Route as RoleDashboardRouteImport } from './routes/$role.dashboard'
+import { Route as RoleChatRouteImport } from './routes/$role.chat'
 import { Route as RoleSplatRouteImport } from './routes/$role.$'
 import { Route as RoleStudentsListRouteImport } from './routes/$role.students.list'
 import { Route as RoleLmsLiveRouteImport } from './routes/$role.lms.live'
@@ -61,6 +62,11 @@ const RoleProfileRoute = RoleProfileRouteImport.update({
 const RoleDashboardRoute = RoleDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => RoleRoute,
+} as any)
+const RoleChatRoute = RoleChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => RoleRoute,
 } as any)
 const RoleSplatRoute = RoleSplatRouteImport.update({
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/$role/$': typeof RoleSplatRoute
+  '/$role/chat': typeof RoleChatRoute
   '/$role/dashboard': typeof RoleDashboardRoute
   '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/$role/$': typeof RoleSplatRoute
+  '/$role/chat': typeof RoleChatRoute
   '/$role/dashboard': typeof RoleDashboardRoute
   '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/$role': typeof RoleRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/$role/$': typeof RoleSplatRoute
+  '/$role/chat': typeof RoleChatRoute
   '/$role/dashboard': typeof RoleDashboardRoute
   '/$role/profile': typeof RoleProfileRoute
   '/app/$': typeof AppSplatRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/$role'
     | '/app'
     | '/$role/$'
+    | '/$role/chat'
     | '/$role/dashboard'
     | '/$role/profile'
     | '/app/$'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/$role'
     | '/app'
     | '/$role/$'
+    | '/$role/chat'
     | '/$role/dashboard'
     | '/$role/profile'
     | '/app/$'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/$role'
     | '/app'
     | '/$role/$'
+    | '/$role/chat'
     | '/$role/dashboard'
     | '/$role/profile'
     | '/app/$'
@@ -353,6 +365,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/$role/dashboard'
       preLoaderRoute: typeof RoleDashboardRouteImport
+      parentRoute: typeof RoleRoute
+    }
+    '/$role/chat': {
+      id: '/$role/chat'
+      path: '/chat'
+      fullPath: '/$role/chat'
+      preLoaderRoute: typeof RoleChatRouteImport
       parentRoute: typeof RoleRoute
     }
     '/$role/$': {
@@ -549,6 +568,7 @@ const RoleStudentsListRouteWithChildren =
 
 interface RoleRouteChildren {
   RoleSplatRoute: typeof RoleSplatRoute
+  RoleChatRoute: typeof RoleChatRoute
   RoleDashboardRoute: typeof RoleDashboardRoute
   RoleProfileRoute: typeof RoleProfileRoute
   RoleAdmissionsApplicationsRoute: typeof RoleAdmissionsApplicationsRouteWithChildren
@@ -565,6 +585,7 @@ interface RoleRouteChildren {
 
 const RoleRouteChildren: RoleRouteChildren = {
   RoleSplatRoute: RoleSplatRoute,
+  RoleChatRoute: RoleChatRoute,
   RoleDashboardRoute: RoleDashboardRoute,
   RoleProfileRoute: RoleProfileRoute,
   RoleAdmissionsApplicationsRoute: RoleAdmissionsApplicationsRouteWithChildren,

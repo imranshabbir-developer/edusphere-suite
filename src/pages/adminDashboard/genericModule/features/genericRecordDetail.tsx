@@ -1,33 +1,7 @@
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { RecordDetailPage } from "@/components/records/RecordDetailPage";
 import { RecordNotFound } from "@/components/records/RecordNotFound";
-import type { FieldDef } from "@/components/ui/RecordDialogs";
-
-interface Row {
-  id: string;
-  name: string;
-  reference: string;
-  owner: string;
-  category: string;
-  status: string;
-  updated: string;
-  value: number;
-  [k: string]: unknown;
-}
-
-const CATS = ["General", "Tier 1", "Tier 2", "Priority", "Standard"];
-const STATUSES = ["Active", "Pending", "Completed", "Draft", "Archived"];
-const OWNERS = ["Alex Morgan", "Priya Sharma", "Daniel Reyes", "Jane Doe", "Mark Lee"];
-
-const fields: FieldDef[] = [
-  { key: "name", label: "Name", required: true, span: 2 },
-  { key: "reference", label: "Reference" },
-  { key: "owner", label: "Owner", type: "select", options: OWNERS },
-  { key: "category", label: "Category", type: "select", options: CATS },
-  { key: "status", label: "Status", type: "select", options: STATUSES },
-  { key: "value", label: "Value", type: "number" },
-  { key: "updated", label: "Date", type: "date" },
-];
+import type { ModuleConfig, ModuleRow } from "@/config/moduleTypes";
 
 export function GenericRecordDetail({
   role,
@@ -37,14 +11,16 @@ export function GenericRecordDetail({
   initialEdit = false,
   rows,
   setRows,
+  config,
 }: {
   role: string;
   modulePath: string;
   recordId: string;
   label: string;
   initialEdit?: boolean;
-  rows: Row[];
-  setRows: Dispatch<SetStateAction<Row[]>>;
+  rows: ModuleRow[];
+  setRows: Dispatch<SetStateAction<ModuleRow[]>>;
+  config: ModuleConfig;
 }) {
   const record = rows.find((r) => r.id === recordId);
   const listPath = `/${role}/${modulePath}`;
@@ -57,17 +33,19 @@ export function GenericRecordDetail({
     return <RecordNotFound listPath={listPath} moduleLabel={labelCap} recordId={recordId} />;
   }
 
+  const recordTitle = String(record[config.titleField] ?? record.name ?? recordId);
+
   return (
     <RecordDetailPage
       variant="generic"
-      record={record as unknown as Record<string, unknown>}
-      fields={fields}
+      record={record}
+      fields={config.fields}
       listPath={listPath}
       moduleLabel={labelCap}
-      recordTitle={record.name}
+      recordTitle={recordTitle}
       initialEdit={initialEdit}
       onSave={(vals) =>
-        setRows((r) => r.map((x) => (x.id === recordId ? { ...x, ...vals } as Row : x)))
+        setRows((r) => r.map((x) => (x.id === recordId ? { ...x, ...vals } : x)))
       }
       onDelete={() => setRows((r) => r.filter((x) => x.id !== recordId))}
     />

@@ -7,6 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import { ModalGradientShell, modalBackdropClass } from "@/components/ui/ModalGradientShell";
 
 export type FeedbackAction = "saved" | "deleted" | "created";
 
@@ -55,50 +56,40 @@ export function ActionFeedbackModal({
 
   return (
     <Dialog open={open} onClose={onClose} className="relative z-[70]">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-black/35 backdrop-blur-[2px] data-[closed]:opacity-0 transition-opacity duration-200"
-      />
+      <DialogBackdrop transition className={modalBackdropClass} />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
           transition
-          className="relative w-full max-w-[20rem] overflow-hidden rounded-2xl border border-border/50 shadow-elegant data-[closed]:scale-95 data-[closed]:opacity-0 transition duration-200"
+          className="relative w-full max-w-[20rem] bg-transparent data-[closed]:scale-95 data-[closed]:opacity-0 transition duration-200"
         >
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(145deg, oklch(0.98 0.02 250), oklch(0.96 0.04 200) 50%, oklch(0.97 0.03 188))",
-            }}
-          />
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/10 blur-2xl pointer-events-none" />
-
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="relative z-10 p-5 text-center"
-          >
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute right-2 top-2 p-1 rounded-lg text-muted-foreground hover:text-foreground"
-              aria-label="Close"
+          <ModalGradientShell>
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative p-5 text-center"
             >
-              <XMarkIcon className="w-4 h-4" />
-            </button>
-            <div className={`mx-auto w-12 h-12 rounded-xl bg-gradient-to-br ${cfg.tone} flex items-center justify-center shadow-elegant mb-3`}>
-              <Icon className="w-6 h-6" />
-            </div>
-            <p className="text-base font-semibold">{cfg.title}</p>
-            <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{cfg.message}</p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="mt-4 w-full py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold"
-            >
-              Got it
-            </button>
-          </motion.div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute right-2 top-2 p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/10"
+                aria-label="Close"
+              >
+                <XMarkIcon className="w-4 h-4" />
+              </button>
+              <div className={`mx-auto w-12 h-12 rounded-xl bg-gradient-to-br ${cfg.tone} flex items-center justify-center shadow-elegant mb-3`}>
+                <Icon className="w-6 h-6" />
+              </div>
+              <p className="text-base font-semibold">{cfg.title}</p>
+              <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{cfg.message}</p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-4 w-full py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold shadow-elegant"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </ModalGradientShell>
         </DialogPanel>
       </div>
     </Dialog>

@@ -27,8 +27,16 @@ export interface Assignment {
   id: string; title: string; course: string; due: string; submissions: number; total: number; status: "Open" | "Closed";
 }
 
-const programs = ["MBA", "B.Tech CSE", "B.Sc Physics", "M.Tech AI", "BBA", "MA English"];
-const depts = ["Computer Science", "Mathematics", "Physics", "Business", "Humanities", "Engineering"];
+const programs = [
+  "B.Tech Computer Science", "B.Tech Software Engineering", "BBA Business Administration",
+  "MBA Executive", "M.Tech Artificial Intelligence", "B.Sc Physics", "BA English Literature",
+  "Diploma in Web Development", "Certificate in Digital Marketing", "Full Stack Web Development Bootcamp",
+  "AI Fundamentals Short Course", "UI/UX Design Professional Certificate",
+];
+const depts = [
+  "Computer Science", "Mathematics", "Physics", "Business Administration",
+  "Humanities", "Engineering", "Marketing", "Design",
+];
 const first = ["Aarav", "Saanvi", "Vihaan", "Ananya", "Arjun", "Diya", "Liam", "Mia", "Noah", "Sophia", "Lucas", "Isabella", "Elijah", "Charlotte", "Oliver", "Amelia"];
 const last = ["Sharma", "Verma", "Patel", "Singh", "Reddy", "Smith", "Johnson", "Brown", "Garcia", "Miller"];
 
@@ -66,7 +74,7 @@ export const teachers: Teacher[] = Array.from({ length: 24 }).map((_, i) => {
 export const courses: Course[] = Array.from({ length: 28 }).map((_, i) => ({
   id: `CRS-${500 + i}`,
   code: `CS${100 + i * 10}`,
-  title: ["Intro to AI", "Data Structures", "Operating Systems", "Database Systems", "Linear Algebra", "Quantum Physics", "Marketing 101", "Corporate Finance", "World Literature", "Machine Learning", "Cloud Computing", "Cybersecurity"][i % 12] + (i > 11 ? ` II` : ""),
+  title: ["Intro to AI", "Data Structures", "Operating Systems", "Database Systems", "Linear Algebra", "Quantum Physics", "Marketing 101", "Corporate Finance", "World Literature", "Machine Learning", "Full Stack Web Development", "Digital Marketing Mastery", "UI/UX Design Bootcamp", "Cybersecurity Essentials"][i % 14] + (i > 13 ? ` II` : ""),
   department: depts[i % depts.length],
   credits: 3 + (i % 3),
   enrolled: 20 + (i * 5) % 80,

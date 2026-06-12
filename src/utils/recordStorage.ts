@@ -6,11 +6,13 @@ function recordIdPrefix(id: string): string {
 }
 
 /** Drop cached rows when their id prefix no longer matches the current module seed. */
-function storageMatchesSeed<T extends { id: string }>(stored: T[], seed: () => T[]): boolean {
-  if (stored.length === 0) return false;
+function storageMatchesSeed<T extends { id: string }>(stored: unknown, seed: () => T[]): stored is T[] {
+  if (!Array.isArray(stored) || stored.length === 0) return false;
   const seedRows = seed();
   if (seedRows.length === 0) return true;
-  return recordIdPrefix(stored[0].id) === recordIdPrefix(seedRows[0].id);
+  const first = stored[0];
+  if (!first || typeof first !== "object" || typeof first.id !== "string") return false;
+  return recordIdPrefix(first.id) === recordIdPrefix(seedRows[0].id);
 }
 
 export function loadRecords<T extends { id: string }>(key: string, seed: () => T[]): T[] {
@@ -18,13 +20,17 @@ export function loadRecords<T extends { id: string }>(key: string, seed: () => T
   try {
     const raw = sessionStorage.getItem(PREFIX + key);
     if (raw) {
-      const parsed = JSON.parse(raw) as T[];
+      const parsed: unknown = JSON.parse(raw);
       if (storageMatchesSeed(parsed, seed)) return parsed;
     }
   } catch {
     /* ignore corrupt storage */
   }
   const data = seed();
+  if (!Array.isArray(data)) {
+    console.error(`[recordStorage] Seed for "${key}" did not return an array`);
+    return [];
+  }
   saveRecords(key, data);
   return data;
 }

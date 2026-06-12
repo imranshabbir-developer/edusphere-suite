@@ -117,6 +117,13 @@
 
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
   --gradient-hero: linear-gradient(135deg, oklch(0.585 0.214 263), oklch(0.72 0.13 188));
+  --modal-gradient-base: linear-gradient(
+    to right,
+    oklch(0.97 0.028 188),
+    oklch(1 0 0) 42%,
+    oklch(1 0 0) 58%,
+    oklch(0.97 0.028 263)
+  );
   --glass-bg: color-mix(in oklab, var(--card) 60%, transparent);
   --glass-border: color-mix(in oklab, var(--foreground) 8%, transparent);
 }
@@ -167,6 +174,14 @@
     transparent 58%
   );
 
+  --modal-gradient-base: linear-gradient(
+    to right,
+    oklch(0.24 0.025 188),
+    oklch(0.22 0.02 260) 42%,
+    oklch(0.22 0.02 260) 58%,
+    oklch(0.24 0.025 263)
+  );
+
   --glass-bg: color-mix(in oklab, var(--card) 50%, transparent);
   --glass-border: color-mix(in oklab, var(--foreground) 12%, transparent);
 }
@@ -203,6 +218,10 @@
 
 @utility shadow-elegant {
   box-shadow: var(--shadow-elegant);
+}
+
+@utility modal-gradient-bg {
+  background: var(--modal-gradient-base);
 }
 
 @utility scrollbar-thin {

@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import { store, useAppSelector } from "@/store/store";
 
 import appCss from "../styles.css?url";
+import favicon from "../assets/favicon.avif?url";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -23,6 +24,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
     ],
     links: [
+      { rel: "icon", type: "image/avif", href: favicon },
+      { rel: "shortcut icon", type: "image/avif", href: favicon },
+      { rel: "apple-touch-icon", href: favicon },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
